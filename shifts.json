@@ -1,0 +1,28 @@
+{
+    "shifts":[
+    {
+        "shiftId": 1,
+        "shiftDate": 10,
+        "shiftDay": "Saturday",
+        "shiftTime": "9AM - 5PM",
+        "shiftMonth": "June",
+        "shiftLocation": "Sterling"
+    },
+    {
+        "shiftId": 2,
+        "shiftDate": 11,
+        "shiftDay": "Sunday",
+        "shiftTime": "8AM - 4PM",
+        "shiftMonth": "June",
+        "shiftLocation": "Ottawa"
+    },
+    {
+        "shiftId": 3,
+        "shiftDate": 12,
+        "shiftDay": "Monday",
+        "shiftTime": "9AM - 5 PM",
+        "shiftMonth": "June",
+        "shiftLocation": "Sterling"
+    }
+]
+}
