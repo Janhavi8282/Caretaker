@@ -10,24 +10,14 @@ import ProfileScreen from "./src/screens/ProfileScreen";
 import YourShiftsScreen from "./src/screens/YourShiftsScreen";
 import OpenShiftsScreen from "./src/screens/OpenShiftsScreen";
 import RequestedShiftsscreen from "./src/screens/RequestedShiftsscreen";
-import OpenShiftDetailsScreen from "./src/screens/OpenShiftDetailsScreen";
-import MainNavigator from "./src/navigations/MainNavigator";
+import RootNavigator from "./src/navigations/RootNavigator";
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="SignIn"
-          component={SignInScreen}
-        />
-        {/* <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        <Stack.Screen name="MainNavigator" component={MainNavigator} /> */}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <RootNavigator />
+
   );
 };
 

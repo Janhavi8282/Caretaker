@@ -6,31 +6,40 @@ import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { auth } from "../../../firebase";
 import { useNavigation } from "@react-navigation/core";
-// import MainNavigator from "./src/navigations/MainNavigator";
-import MainNavigator from "../../navigations/MainNavigator";
 import HomeScreen from "../HomeScreen";
+import axios from "axios";
 
 const SignInScreen = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
 
   //to check whether the user is valid and if is valid can be logged in then redirect to home screen
   const navigation = useNavigation();
-  //   useEffect(() => {
-  //     auth.onAuthStateChanged((user) => {
-  //       if (user) {
-  //         <MainNavigator />;
-  //       }
-  //     });
-  //     //when we leave this screen it's gonna unsubscribe from this listener and does not keep pinging it when it shouldn't
-  //   }, []);
 
   const { height } = useWindowDimensions(); //use the window dimensions for height so it will not affect when screen size changes
 
   const onSignInPressed = () => {
+    console.log("SignIn Pressed");
+    navigation.navigate("MainTabs",{
+      screen: "HomeScreen",params:{user: {firstName: "AAA"}}
+    })
     //Call Login API
-    // navigation.navigate("MainNavigator");
-    return <MainNavigator />;
+    // axios.post('https://localhost:7041/api/Authentication/Login',{email: "nil@gmail.com", password: "1123"})
+    // .then(response => {
+    //   console.log("Success",response);
+    //   if(Array.isArray(response.data) && response.data.length > 0){
+    //     const user = response.data[0];
+    //     navigation.navigate("Home",{user});
+    //   }
+    //   else{
+    //     setError(true);
+    //   }
+    // })
+    // .catch(error => {
+    //   setError(true);
+    //   console.log("Error",error)
+    // })
   };
 
   const onForgotPasswordPressed = () => {
