@@ -7,8 +7,6 @@ const ProfileScreen = (props) => {
       <View style={styles.circle}>
       </View>
       <Text style={styles.name}>Janhavi Patel</Text>
-      <h1>This is my profile screen</h1>
-      <hr style={styles.seperator}/>
     </View>
   )
 }

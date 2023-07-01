@@ -6,6 +6,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import ShiftScreen from './ShiftScreen';
 import { GestureHandlerRootView, TextInput } from 'react-native-gesture-handler';
+import { useRoute } from '@react-navigation/native';
+
 
 
 const Circle = () =>{
@@ -13,22 +15,26 @@ const Circle = () =>{
 };
 
 const HomeScreen = ({navigation}) => {
-    const [search, setSearch] = useState('');
-    const [countries, setCountries] = useState([]);
-    //get countries at start and only when new country is searched
+
+  const route = useRoute();
+
+
+    
     useEffect(() => {
-      getShifts({ name: search })
+      getShifts({ name: "" })
         .then((result) => {
-          setCountries(result.data);
         })
         .catch((error) => alert('Something went wrong'));
-    }, [search]);
+    }, []);
 
     const getShifts = async ()=>{
       const url = `https://api.covid19tracker.ca/summary`
       const result = await axios.get(url);
     return result;
   }
+  const user = route.params?.user;
+
+
   return (
     //search bar 
     <SafeAreaView style={styles.container}>
@@ -40,9 +46,10 @@ const HomeScreen = ({navigation}) => {
       <Ionicons name ='notifications-outline' size={30} style={styles.notification}/>
       </GestureHandlerRootView>
       
-      {/*circle with nameof user who logged in*/}
-      <Circle/>
-      <Text style ={styles.text}>Hello,Janhavi Patel {countries}</Text>
+      {/* circle with nameof user who logged in
+       */}
+       <Circle/>
+      <Text style ={styles.text}>Hello,{user?.firstName ?? ""}</Text>
       
       {/*Quick tasks */}
       <View style={styles.row}>
@@ -54,8 +61,10 @@ const HomeScreen = ({navigation}) => {
         </View>
 
         <View style={styles.columns}>
+        <TouchableOpacity onPress={()=>navigation.navigate('ClockScreen')} style={styles.columns}>
           <AntDesign name='clockcircleo' size={30}  color='#008080'/>
           <Text style={styles.rowIcon}>Clock</Text>
+        </TouchableOpacity>
         </View>
         
         <View style={styles.columns}>
@@ -110,7 +119,6 @@ const styles = StyleSheet.create({
   },
   text:{
     padding: 4,
-    fontFamily: 'Cochin',
     fontSize: 20,
     fontWeight: 'bold',
   },
