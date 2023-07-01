@@ -61,8 +61,10 @@ const HomeScreen = ({navigation}) => {
         </View>
 
         <View style={styles.columns}>
+        <TouchableOpacity onPress={()=>navigation.navigate('ClockScreen')} style={styles.columns}>
           <AntDesign name='clockcircleo' size={30}  color='#008080'/>
           <Text style={styles.rowIcon}>Clock</Text>
+        </TouchableOpacity>
         </View>
         
         <View style={styles.columns}>
@@ -117,7 +119,6 @@ const styles = StyleSheet.create({
   },
   text:{
     padding: 4,
-    fontFamily: 'Cochin',
     fontSize: 20,
     fontWeight: 'bold',
   },
