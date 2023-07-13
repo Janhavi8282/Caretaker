@@ -1,49 +1,62 @@
-import React, { useEffect } from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
-import { View, Image, StyleSheet, useWindowDimensions } from "react-native";
+import { View, Image, StyleSheet, useWindowDimensions,Text } from "react-native";
 import Logo from "../../../assets/loginImage.jpg";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-import { auth } from "../../../firebase";
 import { useNavigation } from "@react-navigation/core";
-import HomeScreen from "../HomeScreen";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignInScreen = () => {
-  const [username, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [error,setError] = useState(false);
+  const [userInfo,setUserInfo] = useState({});
 
   //to check whether the user is valid and if is valid can be logged in then redirect to home screen
   const navigation = useNavigation();
 
   const { height } = useWindowDimensions(); //use the window dimensions for height so it will not affect when screen size changes
-
+  
+  //sign in button pressed
   const onSignInPressed = () => {
-    console.log("SignIn Pressed");
-    navigation.navigate("MainTabs",{
-      screen: "HomeScreen",params:{user: {firstName: "AAA"}}
-    })
+    if(!email || !password){
+      setError(true);
+      return;
+    }
     //Call Login API
-    // axios.post('https://localhost:7041/api/Authentication/Login',{email: "nil@gmail.com", password: "1123"})
-    // .then(response => {
-    //   console.log("Success",response);
-    //   if(Array.isArray(response.data) && response.data.length > 0){
-    //     const user = response.data[0];
-    //     navigation.navigate("Home",{user});
-    //   }
-    //   else{
-    //     setError(true);
-    //   }
-    // })
-    // .catch(error => {
-    //   setError(true);
-    //   console.log("Error",error)
-    // })
+     axios.post('https://lifeshaderapi.azurewebsites.net/api/Authentication/Login',{email, password})
+     .then(response => {
+       //console.log("Success",response);
+       if(Array.isArray(response.data) && response.data.length > 0){
+         let userInfo = response.data[0];
+         setUserInfo(userInfo);
+         AsyncStorage.setItem("userInfo",JSON.stringify(userInfo)).then(()=>{
+          //console.log(userInfo);
+          navigation.navigate("MainTabs",{
+          screen: "HomeScreen",
+          params: {userInfo},
+         })  //save user info to Async Storage
+         
+        });
+      }
+     else{
+      console.log("error");
+         setError(true);
+        
+       }
+     })
+     .catch(error => {
+       setError(true);
+       console.log("Error",error)
+     })
   };
 
+  //forgot password pressed
   const onForgotPasswordPressed = () => {
     console.warn("Forgot Password");
+    navigation.navigate("ForgotPasswordScreen");
   };
 
   return (
@@ -53,22 +66,27 @@ const SignInScreen = () => {
         source={Logo}
         style={[styles.logo, { height: height * 0.3 }, { marginTop: 80 }]} //30% of the height of the window
         resizeMode="contain"
+        
       />
 
+      
       {/* inserting custominput for the textbox in the screen */}
       <CustomInput
         placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        setValue={setUserName}
+        value={email}
+        onChangeText={text => setEmail(text)}
+        setValue={setEmail}
       />
+      
       <CustomInput
         placeholder="Password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChangeText={text => setPassword(text)}
         setValue={setPassword}
         secureTextEntry={true}
       />
+      
+      {error && <Text style={styles.errorText}>Invalid credentials.Please try again.</Text>}
       <CustomButton text="Sign In" onPress={onSignInPressed} />
 
       <CustomButton
@@ -89,6 +107,10 @@ const styles = StyleSheet.create({
     width: "50%",
     maxWidth: 300,
     maxHeight: 200,
+  },
+  errorText:{
+    color: "red",
+    marginBottom: 10,
   },
 });
 

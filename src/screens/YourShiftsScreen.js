@@ -1,11 +1,9 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react';
-import { GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const YourShiftsScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <GestureHandlerRootView>
         <View>
             <Text>June</Text>
               <View style={styles.columns}>
@@ -38,7 +36,7 @@ const YourShiftsScreen = ({navigation}) => {
                 </View>
             </View>
         </View>
-      </GestureHandlerRootView>
+        
     </View>
   )
 }
@@ -47,6 +45,7 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     padding: 20,
+    paddingBottom: 56,
   },
   row:{
     flexDirection:'row',

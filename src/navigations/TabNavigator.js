@@ -16,7 +16,7 @@ const getIconColor = (focused) => ({
   tintColor: focused ? COLORS.primary : COLORS.dark,
 });
 
-const TabsNavigator = () => {
+const TabNavigator = () => {
   const { opened, toggleOpened } = useTabMenu();
   return (
     <Tab.Navigator
@@ -85,6 +85,7 @@ const TabsNavigator = () => {
         name="Shift"
         component={ShiftScreen}
         options={{
+          headerShown: true,
           tabBarItemStyle: {
             height: 0,
           },
@@ -159,4 +160,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TabsNavigator;
+export default TabNavigator;
