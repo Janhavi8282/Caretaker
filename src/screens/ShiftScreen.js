@@ -5,7 +5,6 @@ import { GestureHandlerRootView} from 'react-native-gesture-handler';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 
 
-
 const ShiftScreen = ({navigation}) => {
   return (
     <View style ={styles.container}>
@@ -26,6 +25,7 @@ const ShiftScreen = ({navigation}) => {
           </TouchableOpacity>
       </GestureHandlerRootView>
     </View>
+    
 
     
 
@@ -36,11 +36,12 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     padding: 20,
+    backgroundColor: '#d4d4d4',
   },
   button:{
     padding: 25,
     margin: 10,
-    backgroundColor: '#87CEEB',
+    backgroundColor: '#ffffff',
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     borderBottomEndRadius: 10,
@@ -51,11 +52,11 @@ const styles = StyleSheet.create({
   text:{
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: 'black',
   },
   icon:{
     fontSize: 20,
-    color: '#ffffff',
+    color: 'black',
   }
 })
 

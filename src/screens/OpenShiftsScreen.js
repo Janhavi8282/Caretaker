@@ -1,45 +1,114 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { useEffect,useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {Divider } from 'react-native-paper';
 import { GestureHandlerRootView} from 'react-native-gesture-handler';
 
 
 const OpenShiftsScreen = ({navigation}) =>  {
-  return (
-    <View style={styles.container}>
-      <GestureHandlerRootView>
+  
+  //use state will show the loading state of api. It si set true so it will show the activity indicator for the first
+    let [isLoading,setIsLoading] = useState(true);
+    //state for error if we get any error while api calling
+    let[error,setError] = useState();
+    //state for response that we get from api
+    let[response,setResponse] = useState();
+
+    useEffect(()=>{
+      fetch("https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetAvailableShifts")
+      .then(res => res.json())
+      .then(
+        (result)=>{
+        setIsLoading(false);
+        setResponse(result);
+      },
+      (error)=>{
+        setIsLoading(false);
+        setError(error);
+      }
+      )
+    },[]);
+
+
+  const getContent = () =>{
+    if(isLoading){
+      return <ActivityIndicator size="large"/>;
+    }
+    if(error){
+      return <Text>{error}</Text>
+    }
+    console.log(response);
+    if(!response){
+      return <Text>No shifts available</Text>;
+    }
+    return (
+    <View>
+      {response.map((shift)=>{
+        //for getting the month from date
+        const shiftDate = new Date(shift.date);
+
+         //start time of shift
+         const startTime = new Date(shift.startTime).toLocaleTimeString('en-US',{
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+         });
+
+         const endTime = new Date(shift.endTime).toLocaleTimeString('en-US',{
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+         });
+
+         const timeRange = `${startTime} - ${endTime}`;
+
+         //Helper function to get the ordinal suffix  for the day number
+         const getOrdinalSuffix = (day) =>{
+          if(day >=11 && day<=13){
+            return 'th';
+          }
+          switch(day % 10){
+            case 1: 
+              return 'st';
+            case 2: 
+              return 'nd';
+            case 3:
+              return 'rd';
+            default:
+              return 'th';
+          }
+         };
+        //for getting day of weekday
+        //const dayOfWeek = shiftDate.toLocaleDateString('en-US',{weekday: 'short'}).toUpperCase();
+        const dayOfWeek = `${shiftDate.getDate()}${getOrdinalSuffix(shiftDate.getDate())} ${shiftDate.toLocaleString('default',{month: 'long'})}
+                           `
+
+        return(
         <View>
-            <Text>June</Text>
+         <GestureHandlerRootView>
+          <View key = {shift.shiftId}>
               <View style={styles.columns}>
-                <Text>10</Text>
-                <Text>SAT</Text>
-                <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('OpenShiftDetailsScreen')}>
-                  <Text style={styles.text}>9 AM - 5PM</Text>
-                  <Text style={styles.text}>Sterling</Text>
+                {/* pass the shift object as parameter in touchable opacity so that we will get the details of specific list items */}
+                <TouchableOpacity onPress={()=>navigation.navigate('OpenShiftDetailsScreen', {shiftId: shift.shiftId})}>
+                <Text style={styles.name}>{shift.shiftName}</Text>
+                <Text style={styles.text}>{timeRange} </Text>
+                <Text>{dayOfWeek}</Text>
                 </TouchableOpacity>
-
-                <Text>11</Text>
-                <Text>SUN</Text>
-                <TouchableOpacity style={styles.button}>
-                  <Text style={styles.text}>9 AM - 5PM</Text>
-                  <Text style={styles.text}>Sterling</Text>
-                </TouchableOpacity>
-
-                <Text>12</Text>
-                <Text>MON</Text>
-                <TouchableOpacity style={styles.button}>
-                  <Text style={styles.text}>9 AM - 5PM</Text>
-                  <Text style={styles.text}>Sterling</Text>
-                </TouchableOpacity>
-
-                <Text>15</Text>
-                <Text>WED</Text>
-                <TouchableOpacity style={styles.button}>
-                  <Text style={styles.text}>9 AM - 5PM</Text>
-                  <Text style={styles.text}>Sterling</Text>
-                </TouchableOpacity>
-            </View>
+                
+              </View>
+              {/*<Divider style={styles.divider}/>*/}
         </View>
       </GestureHandlerRootView>
+      </View>
+    );
+  })}
+    </View>
+    );
+  };
+  return (
+    
+    <View style={styles.container}>
+      {getContent()}
     </View>
   )
   }
@@ -50,29 +119,34 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     padding: 20,
+    backgroundColor:'#d4d4d4',
   },
   row:{
     flexDirection:'row',
     justifyContent:'space-between',
     paddingLeft: 5,
     paddingRight: 5,
+    
   },
   columns:{
-    backgroundColor:'transparent',
     flexDirection:'column',
     justifyContent:'space-between',
-    margin:10,
-  },
-  button:{
-    padding: 15,
-    margin: 10,
-    backgroundColor: '#87CEEB',
+    margin: 4,
+    backgroundColor: '#ffffff',
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     borderBottomEndRadius: 10,
     borderBottomStartRadius: 10,
-    justifyContent: 'space-between',
+    padding: 10,
   },
+  name:{
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+
+  divider:{
+    borderBottomWidth: 0.5,
+   },
   
 });
 

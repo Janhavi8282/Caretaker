@@ -1,39 +1,19 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
-import ShiftScreen from './ShiftScreen';
 import { GestureHandlerRootView, TextInput } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
-
-
 
 const Circle = () =>{
   return <SafeAreaView style={styles.circle}/>
 };
 
 const HomeScreen = ({navigation}) => {
-
   const route = useRoute();
-
-
-    
-    useEffect(() => {
-      getShifts({ name: "" })
-        .then((result) => {
-        })
-        .catch((error) => alert('Something went wrong'));
-    }, []);
-
-    const getShifts = async ()=>{
-      const url = `https://api.covid19tracker.ca/summary`
-      const result = await axios.get(url);
-    return result;
-  }
-  const user = route.params?.user;
-
+  const userInfo = route.params?.userInfo;
 
   return (
     //search bar 
@@ -49,30 +29,32 @@ const HomeScreen = ({navigation}) => {
       {/* circle with nameof user who logged in
        */}
        <Circle/>
-      <Text style ={styles.text}>Hello,{user?.firstName ?? ""}</Text>
+      <Text style ={styles.text}>Hello,{userInfo?.firstName ?? ""}</Text>
       
       {/*Quick tasks */}
       <View style={styles.row}>
-        <View style={styles.columns}>
+        <View>
           <TouchableOpacity onPress={()=>navigation.navigate('ShiftScreen')} style={styles.columns}>
             <AntDesign name='calendar' size={30} color='#008080'/>
             <Text style={styles.rowIcon}>Shifts</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.columns}>
+        <View>
         <TouchableOpacity onPress={()=>navigation.navigate('ClockScreen')} style={styles.columns}>
           <AntDesign name='clockcircleo' size={30}  color='#008080'/>
           <Text style={styles.rowIcon}>Clock</Text>
         </TouchableOpacity>
         </View>
         
-        <View style={styles.columns}>
+        <View>
+        <TouchableOpacity onPress={()=>navigation.navigate('AvailabilityScreen')} style={styles.columns}>
           <Ionicons name='newspaper-outline' size={30}  color='#008080'/>
-          <Text style={styles.rowIcon}>News</Text>
+          <Text style={styles.rowIcon}>Availability</Text>
+        </TouchableOpacity>
         </View>
 
-        <View style={styles.columns}>
+        <View>
           <TouchableOpacity onPress={()=>navigation.navigate('ProfileScreen')} style={styles.columns}>
             <Ionicons name='person-outline' size={30}   color='#008080'/>
             <Text style={styles.rowIcon}>Profile</Text>
@@ -92,7 +74,9 @@ const HomeScreen = ({navigation}) => {
             <Text style={styles.textContent}>Thank you and have a good day</Text>
             </View>
       </TouchableOpacity>
+      <Button title="Logout" color="red"></Button>
     </SafeAreaView> 
+    
 
    
     
