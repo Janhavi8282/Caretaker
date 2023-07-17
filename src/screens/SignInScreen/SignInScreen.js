@@ -4,7 +4,6 @@ import { View, Image, StyleSheet, useWindowDimensions } from "react-native";
 import Logo from "../../../assets/loginImage.jpg";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-import { auth } from "../../../firebase";
 import { useNavigation } from "@react-navigation/core";
 import HomeScreen from "../HomeScreen";
 import axios from "axios";
@@ -21,9 +20,10 @@ const SignInScreen = () => {
 
   const onSignInPressed = () => {
     console.log("SignIn Pressed");
-    navigation.navigate("MainTabs",{
-      screen: "HomeScreen",params:{user: {firstName: "AAA"}}
-    })
+    navigation.navigate("MainTabs", {
+      screen: "HomeScreen",
+      params: { user: { firstName: "AAA" } },
+    });
     //Call Login API
     // axios.post('https://localhost:7041/api/Authentication/Login',{email: "nil@gmail.com", password: "1123"})
     // .then(response => {

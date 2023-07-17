@@ -11,30 +11,42 @@ import RequestedShiftsscreen from "../screens/RequestedShiftsscreen";
 import ClockScreen from "../screens/ClockScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import ShiftScreen from "../screens/ShiftScreen";
+import VideoScreen from "../screens/VideoScreen";
+import { TabContextProvider } from "../context/TabContext";
 
 const RootStack = createNativeStackNavigator();
 
 const RootNavigator = () => {
-    return (
-       
+  return (
+    <TabContextProvider>
       <NavigationContainer>
-        <RootStack.Navigator
-          initialRouteName="Root" screenOptions={{ headerShown: false }}>
-          <RootStack.Screen name="SignIn" component={SignInScreen}  />
-          <RootStack.Screen name="MainTabs" component={TabsNavigator}  />
-          <RootStack.Screen name="ClockScreen" component={ClockScreen} options={{headerShown: true}}  />
-          <RootStack.Screen name="ProfileScreen" component={ProfileScreen} options={{headerShown: true}}  />
-          <RootStack.Screen name="ShiftScreen" component={ShiftScreen} options={{headerShown: true}} />
-          <RootStack.Screen name="YourShiftsScreen" component={YourShiftsScreen} options={{headerShown: true}}/>
-          <RootStack.Screen name="OpenShiftsScreen" component={OpenShiftsScreen} options={{headerShown: true}}/>
-          <RootStack.Screen name="RequestedShiftsscreen" component={RequestedShiftsscreen} options={{headerShown: true}} />
-          <RootStack.Screen name="OpenShiftDetailsScreen" component={OpenShiftDetailsScreen} options={{headerShown: true}} />
+        <RootStack.Navigator initialRouteName="Root">
+          <RootStack.Screen name="SignIn" component={SignInScreen} />
+          <RootStack.Screen name="MainTabs" component={TabsNavigator} />
+          <RootStack.Screen name="ClockScreen" component={ClockScreen} />
+          <RootStack.Screen name="ProfileScreen" component={ProfileScreen} />
+          <RootStack.Screen name="ShiftScreen" component={ShiftScreen} />
+          <RootStack.Screen name="VideoScreen" component={VideoScreen} />
+          <RootStack.Screen
+            name="YourShiftsScreen"
+            component={YourShiftsScreen}
+          />
+          <RootStack.Screen
+            name="OpenShiftsScreen"
+            component={OpenShiftsScreen}
+          />
+          <RootStack.Screen
+            name="RequestedShiftsscreen"
+            component={RequestedShiftsscreen}
+          />
+          <RootStack.Screen
+            name="OpenShiftDetailsScreen"
+            component={OpenShiftDetailsScreen}
+          />
         </RootStack.Navigator>
       </NavigationContainer>
-  
-    );
+    </TabContextProvider>
+  );
+};
 
-
-}
-
-export default RootNavigator
+export default RootNavigator;

@@ -20,7 +20,7 @@ const TabsNavigator = () => {
   const { opened, toggleOpened } = useTabMenu();
   return (
     <Tab.Navigator
-      initialRouteName="HomeScreen"
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -28,7 +28,7 @@ const TabsNavigator = () => {
       }}
     >
       <Tab.Screen
-        name="HomeScreen"
+        name="Home"
         component={HomeScreen}
         options={{
           tabBarItemStyle: {
