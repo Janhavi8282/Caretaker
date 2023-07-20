@@ -1,80 +1,48 @@
-// import React from "react";
-// import {
-//   View,
-//   Text,
-//   StyleSheet,
-//   TouchableOpacity,
-//   ScrollView,
-//   FlatList,
-//   Dimensions,
-// } from "react-native";
+import React from "react";
+import { Video } from "expo-av";
 
-// // const VideoScreen = ({ navigation }) => {
-//   return (
-//     <View style={{ flex: 1, padding: 16 }}>
-//       {/* <View style={styles.videoView}></View> */}
-//     </View>
-//   );
-// };
+import { StyleSheet, View, SafeAreaView } from "react-native";
 
-// const styles = StyleSheet.create({
-//   button: {
-//     alignItems: "center",
-//     backgroundColor: "#DDDDDD",
-//     padding: 10,
-//     width: 300,
-//     marginTop: 16,
-//   },
-//   videoView: {
-//     height: height / 3,
-//     width: "100%",
-//     backgroundColor: "gray",
-//   },
-// });
-// export default VideoScreen;
-
-import * as React from "react";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  Text,
-  SafeAreaView,
-} from "react-native";
+// Video screen
 
 const VideoScreen = ({ navigation }) => {
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, padding: 16 }}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
+        <Video
+          ref={video}
+          style={styles.video}
+          source={{
+            uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
           }}
-        >
-          <Text
-            style={{
-              fontSize: 25,
-              textAlign: "center",
-              marginBottom: 16,
-            }}
-          >
-            You are on Time Sheet Screen
-          </Text>
-        </View>
+          useNativeControls
+          resizeMode="contain"
+          isLooping
+          onPlaybackStatusUpdate={setStatus}
+        />
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: "center",
-    backgroundColor: "#DDDDDD",
-    padding: 10,
-    width: 300,
-    marginTop: 16,
+  backgroundVideo: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  video: {
+    flex: 1,
+    alignSelf: "stretch",
   },
 });
 export default VideoScreen;
