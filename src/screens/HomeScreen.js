@@ -55,7 +55,7 @@ const HomeScreen = ({navigation}) => {
         </View>
 
         <View>
-          <TouchableOpacity onPress={()=>navigation.navigate('ProfileScreen')} style={styles.columns}>
+          <TouchableOpacity onPress={()=>navigation.navigate('ProfileScreen',{userInfo})} style={styles.columns}>
             <Ionicons name='person-outline' size={30}   color='#008080'/>
             <Text style={styles.rowIcon}>Profile</Text>
           </TouchableOpacity>

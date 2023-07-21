@@ -1,29 +1,13 @@
 import React,{useState,useEffect} from 'react';
 import { StyleSheet, View, Text,Image} from 'react-native';
-import {Divider } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/AntDesign';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
+import { useRoute } from '@react-navigation/native';
 
-const ProfileScreen = (props) => {
-  const[apiData,setApiData] = useState(null);
-
-  useEffect(()=>{
-    fetchApiData()
-    .then((data)=>setApiData(data))
-    .catch((error)=>console.log(error));
-  },[]);
-
-  const fetchApiData = async () =>{
-    try{
-      const response = await fetch('');
-      const data = await response.json();
-      return data;
-    }
-    catch(error){
-      console.log(error);
-    }
-  };
-
+const ProfileScreen = ({navigation}) => {
+  const route = useRoute();
+  const userInfo = route.params?.userInfo;
+  
+  
   return (
     <View style={styles.container}>
       {/* curved box*/}
@@ -35,37 +19,32 @@ const ProfileScreen = (props) => {
       style={styles.image} />
       </View>
       <View>
-          <Text style={styles.name}>Janhavi Patel</Text>
+          <Text style={styles.name}>{userInfo?.firstName} {userInfo?.lastName}</Text>
       </View>
       </View>
 
+      <View style = {styles.infoContainer}>
       <View style={styles.info}>
-
       <Text style={styles.heading}>Email:</Text>
-      <View style={styles.row}>
-      <Text style ={styles.text}>janhavi@gmail.com</Text>
-      <Icon name='edit' size={20}  color='black' style={styles.icon}/>
+      <View style={styles.textView}>
+        <Text style ={styles.text}>{userInfo?.email}</Text>
       </View>
-      <Divider style={styles.divider}/>
       
       
       <Text style={styles.heading}>Phone: </Text>
-      <Text style ={styles.text}>4372638282</Text>
-      <Divider style={styles.divider}/>
+      <View style={styles.textView}>
+      <Text style ={styles.text}>{userInfo?.mobileNumber}</Text>
+      </View>
      
-      <Text style={styles.heading}>Address:</Text>
-      <Text style ={styles.text}>140 Windale Crescent</Text>
-      <Divider style={styles.divider}/>
-      
-      <Text style={styles.heading}>Certificates:</Text>
+
       <GestureHandlerRootView>
-      <TouchableOpacity style={styles.button}>
-        <Text>Upload</Text>
+      <TouchableOpacity onPress={()=>navigation.navigate('EditProfileScreen',{userInfo})} style={styles.button} >
+        <Text style={styles.btnText}>EDIT</Text>
       </TouchableOpacity>
       </GestureHandlerRootView>
     
       </View>
-
+      </View>
     </View>
 
   )
@@ -74,10 +53,11 @@ const ProfileScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
   flex: 1,
+  backgroundColor: '#f2f6f7',
  },
  box:{
-  flex: 0.4,
-  backgroundColor: "#DE7E5D",
+  flex: 0.3,
+  backgroundColor: "#1dc7c4",
   borderBottomRightRadius: 95,
   justifyContent: 'flex-end',     //Align the content to the bottom of box
   alignItems: 'center',   // Center the content horizontally
@@ -85,6 +65,14 @@ const styles = StyleSheet.create({
   right: 0,
   bottom: 0,
  },
+ viewBox:{
+  padding: 10,
+ },
+ view:{
+  padding: 10,
+  margin: 10,
+  flexDirection: 'row',
+},
  photo:{
   flexDirection: 'column',     //Arrage the circle in column
   alignItems: 'center',
@@ -94,7 +82,6 @@ const styles = StyleSheet.create({
   width: 150,
   height: 150,
   borderRadius: 150/2,
-  backgroundColor: '#DE7E5D',
   shadowRadius: 5,
   padding: 1,
   elevation: 8,
@@ -111,8 +98,14 @@ const styles = StyleSheet.create({
   fontSize: 18,
  },
  info:{
+  marginBottom: 15,
+ },
+ infoContainer:{
   margin: 15,
+  marginTop: 30,
   padding: 20,
+  backgroundColor: '#ffffff',
+  borderRadius: 15,
  },
  heading:{
   fontSize: 20,
@@ -124,25 +117,45 @@ const styles = StyleSheet.create({
   alignContent: 'space-between',
  },
  icon:{
-  marginTop: 5,
+  alignItems: 'center',
  },
  divider:{
   borderBottomWidth: 0.5,
  },
  button:{
-  backgroundColor: "#DE7E5D",
-  height: 40,
-  width: 150,
-  marginTop: 10,
+  backgroundColor: "#fcdb67",
+  height: 60,
+  width: 200,
+  marginTop: 20,
   justifyContent: 'center',
   alignItems: 'center',
-
+  alignSelf: 'center',
+  borderTopStartRadius: 20,
+  borderTopEndRadius: 20,
+  borderBottomStartRadius: 20,
+  borderBottomEndRadius: 20,
  },
  image:{
     width: 150,
     height: 150,
     borderRadius: 150/2,
- }
+ },
+ textView:{
+  padding: 8,
+  margin: 5,
+  backgroundColor: '#f2f6f7',
+  borderTopEndRadius: 10,
+  borderTopStartRadius: 10,
+  borderBottomEndRadius: 10,
+  borderBottomStartRadius: 10,
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+},
+btnText:{
+ color: '#ffffff',
+ fontSize: 20,
+ fontWeight: 'bold', 
+}
  
 })
 
