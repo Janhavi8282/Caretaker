@@ -14,6 +14,7 @@ import ShiftScreen from "../screens/ShiftScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import AvailabilityScreen from "../screens/AvailabilityScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import EditProfilescreen from "../screens/EditProfilescreen";
 
 const RootStack = createNativeStackNavigator();
 
@@ -46,14 +47,15 @@ const RootNavigator = () => {
           <RootStack.Screen name="HomeScreen" component={HomeScreen}  />
           <RootStack.Screen name="MainTabs" component={TabNavigator}  />
           <RootStack.Screen name="ClockScreen" component={ClockScreen} options={{headerShown: true}}  />
-          <RootStack.Screen name="ProfileScreen" component={ProfileScreen} options={{headerShown: true, title: 'Profile', headerTitleAlign: "center"}}  />
-          <RootStack.Screen name="ShiftScreen" component={ShiftScreen} options={{headerShown: true}} />
+          <RootStack.Screen name="ProfileScreen" component={ProfileScreen} options={{headerShown: true, title: 'Profile', headerTitleAlign: "center", headerStyle:{backgroundColor: '#1dc7c4'},headerTintColor: '#ffffff'}}  />
+          <RootStack.Screen name="ShiftScreen" component={ShiftScreen} options={{headerShown: true,title: 'Shifts', headerTitleAlign: "center", headerStyle:{backgroundColor: '#1dc7c4'},headerTintColor: '#ffffff'}} />
           <RootStack.Screen name="YourShiftsScreen" component={YourShiftsScreen} options={{headerShown: true}}/>
-          <RootStack.Screen name="OpenShiftsScreen" component={OpenShiftsScreen} options={{headerShown: true}}/>
+          <RootStack.Screen name="OpenShiftsScreen" component={OpenShiftsScreen} options={{headerShown: true,title:'Open Shifts', headerTitleAlign: "center", headerStyle:{backgroundColor: '#1dc7c4'},headerTintColor: '#ffffff'}}/>
           <RootStack.Screen name="RequestedShiftsscreen" component={RequestedShiftsscreen} options={{headerShown: true}} />
-          <RootStack.Screen name="OpenShiftDetailsScreen" component={OpenShiftDetailsScreen} options={{headerShown: true}} />
+          <RootStack.Screen name="OpenShiftDetailsScreen" component={OpenShiftDetailsScreen} options={{headerShown: true,title: 'Open Shift Details', headerTitleAlign: "center", headerStyle:{backgroundColor: '#1dc7c4'},headerTintColor: '#ffffff'}} />
           <RootStack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
           <RootStack.Screen name="AvailabilityScreen" component={AvailabilityScreen} options={{headerShown: true}} />
+          <RootStack.Screen name="EditProfileScreen" component={EditProfilescreen} options={{headerShown: true,title: 'Edit Profile', headerTitleAlign: "center", headerStyle:{backgroundColor: '#1dc7c4'},headerTintColor: '#ffffff'}}/>
         </RootStack.Navigator>
         </NavigationContainer>
     );

@@ -37,7 +37,7 @@ const OpenShiftsScreen = ({navigation}) =>  {
     if(error){
       return <Text>{error}</Text>
     }
-    console.log(response);
+    //console.log(response);
     if(!response){
       return <Text>No shifts available</Text>;
     }
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     padding: 20,
-    backgroundColor:'#d4d4d4',
+    backgroundColor:'#f2f6f7',
   },
   row:{
     flexDirection:'row',
@@ -130,14 +130,19 @@ const styles = StyleSheet.create({
   },
   columns:{
     flexDirection:'column',
-    justifyContent:'space-between',
-    margin: 4,
+    padding: 15,
+    margin: 10,
     backgroundColor: '#ffffff',
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     borderBottomEndRadius: 10,
     borderBottomStartRadius: 10,
-    padding: 10,
+    justifyContent: 'space-between',
+    shadowColor: 'black',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 3,
   },
   name:{
     fontWeight: 'bold',

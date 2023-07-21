@@ -1,7 +1,7 @@
 import React from 'react';
 import {View,Text,StyleSheet,Pressable} from 'react-native';
 
-const CustomButton = ({onPress,text,type ="PRIMARY"}) =>{
+const CustomButton = ({onPress,text,type}) =>{
     return(
         <Pressable onPress={onPress} style={[styles.container,styles[`container_${type}`]]}>
             <Text style={[styles.text, styles[`text_${type}`]]}>{text}</Text>
@@ -11,11 +11,17 @@ const CustomButton = ({onPress,text,type ="PRIMARY"}) =>{
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
-        padding: 15,
-        margin: 15,
+        backgroundColor: "#fcdb67",
+        height: 60,
+        width: 200,
+        marginTop: 20,
+        justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 5,
+        alignSelf: 'center',
+        borderTopStartRadius: 20,
+        borderTopEndRadius: 20,
+        borderBottomStartRadius: 20,
+        borderBottomEndRadius: 20,
     },
 
     //styles for primary buttons which have a solid background
