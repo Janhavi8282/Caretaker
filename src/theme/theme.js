@@ -4,4 +4,7 @@ export const COLORS = {
   white: "#fff",
   body: "#405792",
   bg: "#ECECEC",
+  teal: "#1dc7c4",
+  lightTeal: "#f2f6f7",
+  yellow: "#fcdb67",
 };

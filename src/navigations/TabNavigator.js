@@ -13,7 +13,7 @@ import ClockScreen from "../screens/ClockScreen";
 const Tab = createBottomTabNavigator();
 
 const getIconColor = (focused) => ({
-  tintColor: focused ? COLORS.primary : COLORS.dark,
+  tintColor: focused ? COLORS.teal : COLORS.dark,
 });
 
 const TabNavigator = () => {
@@ -34,6 +34,11 @@ const TabNavigator = () => {
           tabBarItemStyle: {
             height: 0,
           },
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: COLORS.teal,
+          },
+          headerTintColor: COLORS.white,
           tabBarIcon: ({ focused }) => (
             <View style={styles.tabIconContainer}>
               <Image
@@ -55,6 +60,11 @@ const TabNavigator = () => {
           tabBarItemStyle: {
             height: 0,
           },
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: COLORS.teal, // Change this color to your desired color
+          },
+          headerTintColor: COLORS.white,
           tabBarIcon: ({ focused }) => (
             <View style={styles.tabIconContainer}>
               <Image
@@ -86,6 +96,10 @@ const TabNavigator = () => {
         component={ShiftScreen}
         options={{
           headerShown: true,
+          headerStyle: {
+            backgroundColor: COLORS.teal, // Change this color to your desired color
+          },
+          headerTintColor: COLORS.white,
           tabBarItemStyle: {
             height: 0,
           },
@@ -110,6 +124,11 @@ const TabNavigator = () => {
           tabBarItemStyle: {
             height: 0,
           },
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: COLORS.teal, // Change this color to your desired color
+          },
+          headerTintColor: COLORS.white,
           tabBarIcon: ({ focused }) => (
             <View style={styles.tabIconContainer}>
               <Image
@@ -139,7 +158,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: COLORS.white,
     borderTopColor: "transparent",
-    shadowColor: COLORS.dark,
+    shadowColor: COLORS.teal,
     shadowOffset: {
       height: 6,
       width: 0,
