@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     padding: 20,
-    backgroundColor: '#d4d4d4',
+    backgroundColor: '#f2f6f7',
   },
   button:{
     padding: 25,
@@ -48,6 +48,11 @@ const styles = StyleSheet.create({
     borderBottomStartRadius: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    shadowColor: 'black',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 3,
   },
   text:{
     fontSize: 18,
@@ -56,7 +61,7 @@ const styles = StyleSheet.create({
   },
   icon:{
     fontSize: 20,
-    color: 'black',
+    color: '#fcdb67',
   }
 })
 

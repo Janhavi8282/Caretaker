@@ -21,7 +21,7 @@ const OpenShiftDetailsScreen = ({navigation,route}) => {
     .then(
       (result)=>{
       setIsLoading(false);
-      console.log(response);
+      //console.log(response);
       const shiftClicked = result.find(shift=>shift.shiftId == parseInt(shiftId));
       if(shiftClicked){
       setShift(shiftClicked);
@@ -47,7 +47,7 @@ const OpenShiftDetailsScreen = ({navigation,route}) => {
     if(error){
       return <Text>{error}</Text>
     }
-    console.log(shift,shiftId);
+    //console.log(shift,shiftId);
     if(!shift){
       return <Text>Shift not found</Text>
     }
@@ -100,18 +100,21 @@ const OpenShiftDetailsScreen = ({navigation,route}) => {
 
         return(
            <GestureHandlerRootView>
+            <View style={styles.infoContainer}>
             <View style={styles.rectangle} >
+              
               <Text style={styles.text}>{shift.shiftName}</Text>
               <Text>{shift.description}</Text>
-              <Text>{date}</Text>
               <Text>{dayOfWeek} </Text>
               <Text>{timeRange} </Text>
               <Text>{address}</Text>
+              
             </View>
     
               <Pressable style = {styles.button} onPress={() => navigation.navigate('RequestedShiftsscreen')}>
-                <Text style={styles.buttonText}>Request</Text>
+                <Text style={styles.buttonText}>REQUEST</Text>
               </Pressable>
+              </View>
           </GestureHandlerRootView>
         )  
       }
@@ -131,15 +134,31 @@ const styles = StyleSheet.create({
         margin: 5,
         width: '100%',
         height: '100%',
+        backgroundColor: '#f2f6f7',
+    },
+    infoContainer: {
+      padding: 20,
+      margin: 20,
+      backgroundColor: '#ffffff',
+      borderRadius: 15,
+      justifyContent: 'center',
+      alignContent: 'center',
+
     },
     rectangle:{
-        backgroundColor: '#ffffff',
-        padding: 20,
-        margin: 20,
-        borderTopLeftRadius: 10,
-        borderBottomLeftRadius: 10,
-        borderTopEndRadius: 10,
-        borderBottomEndRadius: 10
+      padding: 15,
+      margin: 10,
+      backgroundColor: '#f2f6f7',
+      borderTopEndRadius: 10,
+      borderTopStartRadius: 10,
+      borderBottomEndRadius: 10,
+      borderBottomStartRadius: 10,
+      justifyContent: 'space-between',
+      shadowColor: 'black',
+      shadowOffset: {width: 0, height: 2},
+      shadowOpacity: 0.2,
+      shadowRadius: 5,
+      elevation: 3,
       },
       text:{
         fontSize: 18,
@@ -147,14 +166,17 @@ const styles = StyleSheet.create({
         color: 'black',
       },
       button: {
-        alignItems: 'center',
+        backgroundColor: "#fcdb67",
+        height: 60,
+        width: 200,
+        marginTop: 20,
         justifyContent: 'center',
-        paddingVertical: 20,
-        paddingHorizontal: 30,
-        borderRadius: 4,
-        elevation: 3,
-        margin: 10,
-        backgroundColor: '#DE7E5D',
+        alignItems: 'center',
+        alignSelf: 'center',
+        borderTopStartRadius: 20,
+        borderTopEndRadius: 20,
+        borderBottomStartRadius: 20,
+        borderBottomEndRadius: 20,
       },
       buttonText: {
         fontSize: 16,
