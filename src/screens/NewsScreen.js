@@ -25,10 +25,10 @@ const NewsScreen = ({ navigation }) => {
     return () => {};
   }, []);
 
-  getListPhotoes = () => {
+  getListPhotoes = async () => {
     const apiURL =
       "https://lifeshaderapi.azurewebsites.net/api/NewsService/GetAllNews";
-    fetch(apiURL)
+    await fetch(apiURL)
       .then((res) => res.json())
       .then((resJson) => {
         setdata(resJson);

@@ -25,14 +25,16 @@ import NewsDetailScreen from "../screens/NewsDetailScreen";
 const HomeScreen = ({ navigation }) => {
   const route = useRoute();
   const userInfo = route.params?.userInfo;
+  const userId = route.params?.id;
   const [data, setdata] = useState([]);
   const [currentIndex, setcurrentIndex] = useState();
   const [refFlatList, setrefFlatList] = useState();
+  const [newsId, setnewsId] = useState("");
   const [id, setId] = useState("");
-  const userfName = userInfo?.firstName;
-  const userlName = userInfo?.lastName;
-  const userID = userInfo?.userId;
-  let [isLoading, setIsLoading] = useState(true);
+  // const userfName = userInfo?.firstName;
+  // const userlName = userInfo?.lastName;
+  // const userID = userInfo?.userId;
+  let [isLoading, setisLoading] = useState(true);
   let [error, setError] = useState();
   let [response, setResponse] = useState();
 
@@ -47,46 +49,58 @@ const HomeScreen = ({ navigation }) => {
     return dates;
   };
   const upcomingDates = getUpcomingWeekDates();
-  useEffect(() => {
-    fetch(
-      "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetAvailableShifts"
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setIsLoading(false);
-          setResponse(result);
-        },
-        (error) => {
-          setIsLoading(false);
-          setError(error);
-        }
-      );
-  }, []);
+
+  // useEffect(() => {
+  //   fetch(
+  //     "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID"
+  //   )
+  //     .then((res) => res.json())
+  //     .then(
+  //       (result) => {
+  //         setIsLoading(false);
+  //         setResponse(result);
+  //       },
+  //       (error) => {
+  //         setIsLoading(false);
+  //         setError(error);
+  //       }
+  //     );
+  // }, []);
 
   useEffect(() => {
-    getListPhotoes();
+    console.log("UserName");
+    console.log(userInfo?.firstName);
+    console.log("AS" + userId);
+    getListNews();
     return () => {};
   }, []);
 
-  let getListPhotoes = () => {
+  let getListNews = async () => {
     const apiURL =
       "https://lifeshaderapi.azurewebsites.net/api/NewsService/GetAllNews";
-    fetch(apiURL)
+    await fetch(apiURL)
       .then((res) => res.json())
       .then((resJson) => {
-        setdata(resJson);
+        // Remove duplicates based on the newsId
+        const uniqueData = resJson.filter(
+          (item, index, self) =>
+            index === self.findIndex((i) => i.newsId === item.newsId)
+        );
+        setdata(uniqueData);
       })
       .catch((error) => {
         console.log("Error: ".error);
       })
       .finally(() => setisLoading(false));
+    console.log("===============UserID");
+    console.log(userInfo?.firstName);
+    // console.log(userID);
   };
 
   onClickItem = (item, index) => {
     setcurrentIndex(index);
     const newArrData = data.map((e, index) => {
-      if (item.id == e.id) {
+      if (item.newsId == e.newsId) {
         return {
           ...e,
           selected: true,
@@ -139,6 +153,9 @@ const HomeScreen = ({ navigation }) => {
         style={styles.notification}
       />  */}
       <View>
+        <Text style={styles.text}>Hello,{userInfo?.firstName ?? ""}</Text>
+      </View>
+      <View>
         <Text style={styles.text}>Upcoming Shifts</Text>
       </View>
       <View style={styles.datecontainer}>
@@ -150,9 +167,7 @@ const HomeScreen = ({ navigation }) => {
             <Text key={index} style={styles.dateText}>
               {date.format("dd")}
             </Text>
-            <Text key={index} style={styles.dateText}>
-              {date.format("D")}
-            </Text>
+            <Text style={styles.dateText}>{date.format("D")}</Text>
           </View>
         ))}
       </View>
@@ -166,7 +181,8 @@ const HomeScreen = ({ navigation }) => {
           <FlatList
             data={data}
             renderItem={renderItem}
-            keyExtractor={(item) => `key- ${item.id}`}
+            // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
+            keyExtractor={(item1) => item1.newsId.toString()}
             getItemLayout={getItemLayout}
             ref={(ref) => setrefFlatList(ref)}
           />
@@ -182,17 +198,6 @@ const styles = StyleSheet.create({
     // height: 100,
     // alignItems: "center",
     // backgroundColor: "#e5e5e5",
-  },
-  notification: {},
-  circle: {
-    width: 100,
-    height: 100,
-    borderRadius: 100 / 2,
-    backgroundColor: "#87CEEB",
-    shadowRadius: 5,
-    padding: 15,
-    marginTop: 40,
-    elevation: 8,
   },
   text: {
     fontSize: 20,

@@ -1,15 +1,17 @@
 // React Native Bottom Navigation
 // https://aboutreact.com/react-native-bottom-navigation/
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
   View,
   Text,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import { COLORS } from "../theme/theme";
+import Modal from "react-native-modal";
 
 const ClockScreen = ({ navigation }) => {
   const [timer, setTimer] = useState(0);
@@ -18,13 +20,27 @@ const ClockScreen = ({ navigation }) => {
   const countRef = useRef(null);
   const [displayMessage, setDisplayMessage] = useState("You are off Clock");
 
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+  const timerRef = useRef(null);
+  const [realTimeData, setRealTimeData] = useState([]);
+
   // function to handle the start button press
   const handleStart = () => {
     setDisplayMessage("You are on Clock!");
     setIsActive(true);
     setIsPaused(false);
+
+    setStartTime(new Date());
+    setRealTimeData([]);
+
     countRef.current = setInterval(() => {
       setTimer((timer) => timer + 1);
+    }, 1000);
+
+    timerRef.current = setInterval(() => {
+      const currentTime = new Date().toLocaleTimeString();
+      setRealTimeData((prevData) => [...prevData, currentTime]);
     }, 1000);
   };
   // function to handle the pause button press
@@ -42,13 +58,49 @@ const ClockScreen = ({ navigation }) => {
     }, 1000);
   };
   // function to handle the reset button press
-  const handleReset = () => {
+  const handleStop = () => {
     setDisplayMessage("You are off Clock");
+
+    setEndTime(new Date());
+    clearInterval(timerRef.current);
+
     clearInterval(countRef.current);
     setIsActive(false);
     setIsPaused(false);
     setTimer(0);
+
+    Alert.alert("Confirmation", "Are you sure you want to stop the clcok?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Save",
+        onPress: handleConfirmation,
+      },
+    ]);
   };
+
+  const getTimeDifference = () => {
+    if (startTime && endTime) {
+      const difference = endTime.getTime() - startTime.getTime();
+      const seconds = Math.floor(difference / 1000);
+      return `Time elapsed: await ${seconds} seconds`;
+    }
+    return "";
+  };
+  // Function to handle the confirmation (when the user confirms)
+  const handleConfirmation = async () => {
+    // Perform the action you want after the user confirms (e.g., save data, delete data, etc.)
+    // ...
+    console.log(startTime);
+    console.log(endTime);
+    console.log("===========");
+    console.log(realTimeData[0]);
+    console.log(realTimeData[realTimeData.length - 1]);
+    console.log(getTimeDifference());
+  };
+
   // calculate the time values for display
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
@@ -88,8 +140,8 @@ const ClockScreen = ({ navigation }) => {
               <TouchableOpacity style={styles.button} onPress={handlePause}>
                 <Text style={styles.buttonText}>Pause</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={handleReset}>
-                <Text style={styles.buttonText}>Reset</Text>
+              <TouchableOpacity style={styles.button} onPress={handleStop}>
+                <Text style={styles.buttonText}>Stop</Text>
               </TouchableOpacity>
               {isPaused && (
                 <TouchableOpacity
@@ -103,6 +155,7 @@ const ClockScreen = ({ navigation }) => {
           )}
         </View>
       </View>
+      <Text>{getTimeDifference()}</Text>
     </SafeAreaView>
   );
 };
