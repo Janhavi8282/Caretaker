@@ -4,13 +4,18 @@ import {
   TouchableWithoutFeedback,
   View,
   StyleSheet,
+  TouchableOpacity,
   Image,
   Animated,
 } from "react-native";
 import { COLORS } from "../theme/theme";
+import { useNavigation } from "@react-navigation/native";
+import VideoScreen from "../screens/VideoScreen";
+import NewsScreen from "../screens/NewsScreen";
 
 const AddButton = ({ opened, toggleOpened }) => {
   const animation = React.useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation();
 
   React.useEffect(() => {
     Animated.timing(animation, {
@@ -31,7 +36,7 @@ const AddButton = ({ opened, toggleOpened }) => {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <TouchableWithoutFeedback>
+        <TouchableOpacity onPress={() => navigation.navigate("VideoScreen")}>
           <Animated.View
             style={[
               styles.item,
@@ -60,8 +65,8 @@ const AddButton = ({ opened, toggleOpened }) => {
               style={styles.itemIcon}
             />
           </Animated.View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("NewsScreen")}>
           <Animated.View
             style={[
               styles.item,
@@ -84,8 +89,8 @@ const AddButton = ({ opened, toggleOpened }) => {
               style={styles.itemIcon}
             />
           </Animated.View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback>
+        </TouchableOpacity>
+        <TouchableOpacity>
           <Animated.View
             style={[
               styles.item,
@@ -114,11 +119,8 @@ const AddButton = ({ opened, toggleOpened }) => {
               style={styles.itemIcon}
             />
           </Animated.View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback
-          onPress={toggleOpened}
-          style={styles.addButton}
-        >
+        </TouchableOpacity>
+        <TouchableOpacity onPress={toggleOpened} style={styles.addButton}>
           <Animated.View
             style={[
               styles.addButtonInner,
@@ -140,7 +142,7 @@ const AddButton = ({ opened, toggleOpened }) => {
               style={styles.addButtonIcon}
             />
           </Animated.View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
   addButtonInner: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.teal,
     width: 60,
     height: 60,
     borderRadius: 30,
@@ -185,7 +187,7 @@ const styles = StyleSheet.create({
     left: 5,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.teal,
     width: 50,
     height: 50,
     borderRadius: 25,
