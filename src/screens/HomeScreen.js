@@ -6,6 +6,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import { GestureHandlerRootView, TextInput } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
+import OpenShiftDetailsScreen from './OpenShiftDetailsScreen';
 
 const Circle = () =>{
   return <SafeAreaView style={styles.circle}/>
@@ -23,7 +24,7 @@ const HomeScreen = ({navigation}) => {
         <Ionicons name="search" size={20} color="black" style={styles.searchBar}/>
         <TextInput placeholder='Search'/>
       </View>
-      <Ionicons name ='notifications-outline' size={30} style={styles.notification}/>
+      <Ionicons name ='notifications-outline' size={30} style={styles.notification} onPress={() => navigation.navigate('NotificationScreen')}/>
       </GestureHandlerRootView>
       
       {/* circle with nameof user who logged in
@@ -34,7 +35,7 @@ const HomeScreen = ({navigation}) => {
       {/*Quick tasks */}
       <View style={styles.row}>
         <View>
-          <TouchableOpacity onPress={()=>navigation.navigate('ShiftScreen')} style={styles.columns}>
+          <TouchableOpacity onPress={()=>navigation.navigate('ShiftScreen',{userInfo})} style={styles.columns}>
             <AntDesign name='calendar' size={30} color='#008080'/>
             <Text style={styles.rowIcon}>Shifts</Text>
           </TouchableOpacity>

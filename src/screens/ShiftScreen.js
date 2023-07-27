@@ -1,68 +1,77 @@
-import { View, Text , StyleSheet} from 'react-native'
-import React from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { GestureHandlerRootView} from 'react-native-gesture-handler';
-import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import IconFontAwesome from "react-native-vector-icons/FontAwesome5";
+import { useRoute } from "@react-navigation/native";
 
-
-const ShiftScreen = ({navigation}) => {
+const ShiftScreen = ({ navigation }) => {
+  const route = useRoute();
+  const userInfo = route.params?.userInfo;
   return (
-    <View style ={styles.container}>
+    <View style={styles.container}>
       <GestureHandlerRootView>
-          <TouchableOpacity onPress={()=>navigation.navigate('YourShiftsScreen')} style={styles.button}>
-              <Text style={styles.text}>Your shifts</Text>
-              <IconFontAwesome name="greater-than" style={styles.icon}/>
-          </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("YourShiftsScreen")}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Your shifts</Text>
+          <IconFontAwesome name="greater-than" style={styles.icon} />
+        </TouchableOpacity>
 
-          <TouchableOpacity onPress={()=>navigation.navigate('OpenShiftsScreen')} style={styles.button}>
-            <Text style={styles.text}>Open shifts</Text>
-            <IconFontAwesome name="greater-than" style={styles.icon}/>
-          </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("OpenShiftsScreen", { userInfo })}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Open shifts</Text>
+          <IconFontAwesome name="greater-than" style={styles.icon} />
+        </TouchableOpacity>
 
-          <TouchableOpacity onPress={()=>navigation.navigate('RequestedShiftsscreen')} style={styles.button}>
-            <Text style={styles.text}>Requested shifts</Text>
-            <IconFontAwesome name="greater-than" style={styles.icon}/>
-          </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("RequestedShiftsscreen", { userInfo })
+          }
+          style={styles.button}
+        >
+          <Text style={styles.text}>Requested shifts</Text>
+          <IconFontAwesome name="greater-than" style={styles.icon} />
+        </TouchableOpacity>
       </GestureHandlerRootView>
     </View>
-    
-
-    
-
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
+  container: {
+    flex: 1,
     padding: 20,
-    backgroundColor: '#f2f6f7',
+    backgroundColor: "#f2f6f7",
   },
-  button:{
+  button: {
     padding: 25,
     margin: 10,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     borderBottomEndRadius: 10,
     borderBottomStartRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    shadowColor: 'black',
-    shadowOffset: {width: 0, height: 2},
+    flexDirection: "row",
+    justifyContent: "space-between",
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 3,
   },
-  text:{
+  text: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: 'black',
+    fontWeight: "bold",
+    color: "black",
   },
-  icon:{
+  icon: {
     fontSize: 20,
-    color: '#fcdb67',
-  }
-})
+    color: "#fcdb67",
+  },
+});
 
-export default ShiftScreen
+export default ShiftScreen;

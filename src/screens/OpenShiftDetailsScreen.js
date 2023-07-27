@@ -1,9 +1,11 @@
-import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator, Pressable, Alert } from 'react-native'
 import React from 'react';
 import { useEffect,useState } from 'react';
 import { GestureHandlerRootView} from 'react-native-gesture-handler';
+import { useRoute } from '@react-navigation/native';
 
 const OpenShiftDetailsScreen = ({navigation,route}) => {
+  const route1 = useRoute();
   //use state will show the loading state of api. It si set true so it will show the activity indicator for the first
   let [isLoading,setIsLoading] = useState(true);
   //state for error if we get any error while api calling
@@ -14,7 +16,10 @@ const OpenShiftDetailsScreen = ({navigation,route}) => {
   let[shift,setShift] = useState(null);
   //getting the shift id
   const { shiftId } = route.params;
+  const userInfo = route1.params?.userInfo;
+  const {userId} = userInfo;
 
+  //getting the details of available shifts
   useEffect(()=>{
     fetch("https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetAvailableShifts")
     .then(res => res.json())
@@ -29,8 +34,6 @@ const OpenShiftDetailsScreen = ({navigation,route}) => {
       else{
         setError('Shift not found')
       }
-      //setResponse(result);
-     
     },
     (error)=>{
       setIsLoading(false);
@@ -39,7 +42,44 @@ const OpenShiftDetailsScreen = ({navigation,route}) => {
     )
   },[shiftId]);
 
-  
+  //posting the data to requested shifts when the button is clicked
+  const handleRequestShift = ()  =>{
+    //If shift is not available or data is not loaded, do nothing
+    try{
+      fetch('https://lifeshaderapi.azurewebsites.net/api/ShiftServices/RequestShift',{
+         method: 'POST',
+         headers:{
+            'Accept': 'application/json',   //accept json 
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+           shiftId: shiftId,
+           userId: userId,
+         }) 
+      })
+      .then((response)=>{
+        if(response.status === 200){
+          showSuccessBox();   //show success message
+        }
+      })
+      //console.log("User", userId);
+    }catch(e){
+      console.log(e);
+    }
+  };
+
+  //success box when shift is requested successfully
+  const showSuccessBox = () =>{
+    Alert.alert(
+      'Your Shift is Requested','Go back to shifts screen',[
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate('ShiftScreen'),
+        }
+      ]
+    )
+  }
+
   const getContent = () =>{
     if(isLoading){
       return <ActivityIndicator size="large"/>;
@@ -47,7 +87,6 @@ const OpenShiftDetailsScreen = ({navigation,route}) => {
     if(error){
       return <Text>{error}</Text>
     }
-    //console.log(shift,shiftId);
     if(!shift){
       return <Text>Shift not found</Text>
     }
@@ -111,11 +150,12 @@ const OpenShiftDetailsScreen = ({navigation,route}) => {
               
             </View>
     
-              <Pressable style = {styles.button} onPress={() => navigation.navigate('RequestedShiftsscreen')}>
+              <Pressable style = {styles.button} onPress={handleRequestShift}>
                 <Text style={styles.buttonText}>REQUEST</Text>
               </Pressable>
               </View>
           </GestureHandlerRootView>
+          
         )  
       }
       
@@ -143,7 +183,6 @@ const styles = StyleSheet.create({
       borderRadius: 15,
       justifyContent: 'center',
       alignContent: 'center',
-
     },
     rectangle:{
       padding: 15,
