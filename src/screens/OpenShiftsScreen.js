@@ -3,10 +3,12 @@ import { useEffect,useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {Divider } from 'react-native-paper';
 import { GestureHandlerRootView} from 'react-native-gesture-handler';
+import { useRoute } from '@react-navigation/native';
 
 
 const OpenShiftsScreen = ({navigation}) =>  {
-  
+  const route = useRoute();
+  const userInfo = route.params?.userInfo;
   //use state will show the loading state of api. It si set true so it will show the activity indicator for the first
     let [isLoading,setIsLoading] = useState(true);
     //state for error if we get any error while api calling
@@ -89,7 +91,7 @@ const OpenShiftsScreen = ({navigation}) =>  {
           <View key = {shift.shiftId}>
               <View style={styles.columns}>
                 {/* pass the shift object as parameter in touchable opacity so that we will get the details of specific list items */}
-                <TouchableOpacity onPress={()=>navigation.navigate('OpenShiftDetailsScreen', {shiftId: shift.shiftId})}>
+                <TouchableOpacity  key ={shift} onPress={()=>navigation.navigate('OpenShiftDetailsScreen', {shiftId: shift.shiftId,userInfo})}>
                 <Text style={styles.name}>{shift.shiftName}</Text>
                 <Text style={styles.text}>{timeRange} </Text>
                 <Text>{dayOfWeek}</Text>
