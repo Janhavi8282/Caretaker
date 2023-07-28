@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "../screens/HomeScreen";
 import SignInScreen from "../screens/SignInScreen/SignInScreen";
 import TabNavigator from "./TabNavigator";
@@ -13,10 +13,13 @@ import ProfileScreen from "../screens/ProfileScreen";
 import ShiftScreen from "../screens/ShiftScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import AvailabilityScreen from "../screens/AvailabilityScreen";
-import NotificationScreen from "../screens/NotificationScreen";
-import NotificationDetailsScreen from "../screens/NotificationDetailsScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import EditProfilescreen from "../screens/EditProfilescreen";
+import NewsScreen from "../screens/NewsScreen";
+import NewsDetailScreen from "../screens/NewsDetailScreen";
+import { TabContextProvider } from "../context/TabContext";
+import TimeSheetScreen from "../screens/TimeSheetScreen";
+import VideoScreen from "../screens/VideoScreen";
+import { COLORS } from "../theme/theme";
 
 const RootStack = createNativeStackNavigator();
 
@@ -40,124 +43,120 @@ const RootNavigator = () => {
   }, []);
 
   return (
-    <NavigationContainer>
-      <RootStack.Navigator
-        initialRouteName={isLoggedIn ? "HomeScreen" : "SignIn"}
-        screenOptions={{ headerShown: false }}
-      >
-        <RootStack.Screen name="SignIn" component={SignInScreen} />
-        <RootStack.Screen name="HomeScreen" component={HomeScreen} />
-        <RootStack.Screen name="MainTabs" component={TabNavigator} />
-        <RootStack.Screen
-          name="ClockScreen"
-          component={ClockScreen}
-          options={{ headerShown: true }}
-        />
-        <RootStack.Screen
-          name="ProfileScreen"
-          component={ProfileScreen}
-          options={{
-            headerShown: true,
-            title: "Profile",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#1dc7c4" },
-            headerTintColor: "#ffffff",
-          }}
-        />
-        <RootStack.Screen
-          name="ShiftScreen"
-          component={ShiftScreen}
-          options={{
-            headerShown: true,
-            title: "Shifts",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#1dc7c4" },
-            headerTintColor: "#ffffff",
-          }}
-        />
-        <RootStack.Screen
-          name="YourShiftsScreen"
-          component={YourShiftsScreen}
-          options={{ headerShown: true }}
-        />
-        <RootStack.Screen
-          name="OpenShiftsScreen"
-          component={OpenShiftsScreen}
-          options={{
-            headerShown: true,
-            title: "Open Shifts",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#1dc7c4" },
-            headerTintColor: "#ffffff",
-          }}
-        />
-        <RootStack.Screen
-          name="RequestedShiftsscreen"
-          component={RequestedShiftsscreen}
-          options={{
-            headerShown: true,
-            title: "Requested Shifts",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#1dc7c4" },
-            headerTintColor: "#ffffff",
-          }}
-        />
-        <RootStack.Screen
-          name="OpenShiftDetailsScreen"
-          component={OpenShiftDetailsScreen}
-          options={{
-            headerShown: true,
-            title: "Open Shift Details",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#1dc7c4" },
-            headerTintColor: "#ffffff",
-          }}
-        />
-        <RootStack.Screen
-          name="ForgotPasswordScreen"
-          component={ForgotPasswordScreen}
-        />
-        <RootStack.Screen
-          name="AvailabilityScreen"
-          component={AvailabilityScreen}
-          options={{ headerShown: true }}
-        />
-        <RootStack.Screen
-          name="EditProfileScreen"
-          component={EditProfilescreen}
-          options={{
-            headerShown: true,
-            title: "Edit Profile",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#1dc7c4" },
-            headerTintColor: "#ffffff",
-          }}
-        />
-        <RootStack.Screen
-          name="NotificationScreen"
-          component={NotificationScreen}
-          options={{
-            headerShown: true,
-            title: "Notifications",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#1dc7c4" },
-            headerTintColor: "#ffffff",
-          }}
-        />
-        <RootStack.Screen
-          name="NotificationDetailsScreen"
-          component={NotificationDetailsScreen}
-          options={{
-            headerShown: true,
-            title: "Notification Details",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#1dc7c4" },
-            headerTintColor: "#ffffff",
-          }}
-        />
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <TabContextProvider>
+      <NavigationContainer>
+        <RootStack.Navigator
+          initialRouteName={isLoggedIn ? "HomeScreen" : "SignIn"}
+          screenOptions={{ headerShown: false }}
+        >
+          <RootStack.Screen name="SignIn" component={SignInScreen} />
+          <RootStack.Screen
+            name="HomeScreen"
+            component={HomeScreen}
+            options={{ headerShown: true }}
+          />
+          <RootStack.Screen name="MainTabs" component={TabNavigator} />
+          <RootStack.Screen
+            name="ClockScreen"
+            component={ClockScreen}
+            options={{ headerShown: true }}
+          />
+          <RootStack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
+            options={{
+              headerShown: true,
+              title: "Profile",
+              headerTitleAlign: "center",
+            }}
+          />
+          <RootStack.Screen
+            name="ShiftScreen"
+            component={ShiftScreen}
+            options={{ headerShown: true }}
+          />
+          <RootStack.Screen
+            name="YourShiftsScreen"
+            component={YourShiftsScreen}
+            options={{ headerShown: true }}
+          />
+          <RootStack.Screen
+            name="OpenShiftsScreen"
+            component={OpenShiftsScreen}
+            options={{ headerShown: true }}
+          />
+          <RootStack.Screen
+            name="RequestedShiftsscreen"
+            component={RequestedShiftsscreen}
+            options={{ headerShown: true }}
+          />
+          <RootStack.Screen
+            name="OpenShiftDetailsScreen"
+            component={OpenShiftDetailsScreen}
+            options={{ headerShown: true }}
+          />
+          <RootStack.Screen
+            name="ForgotPasswordScreen"
+            title="Forgot Password"
+            component={ForgotPasswordScreen}
+            options={{ headerShown: true }}
+          />
+          <RootStack.Screen
+            name="AvailabilityScreen"
+            component={AvailabilityScreen}
+            options={{ headerShown: true }}
+          />
+          <RootStack.Screen
+            name="NewsScreen"
+            component={NewsScreen}
+            options={{
+              title: "News Screen",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.teal,
+              },
+              headerTintColor: COLORS.white,
+            }}
+          />
+          <RootStack.Screen
+            name="NewsDetailScreen"
+            component={NewsDetailScreen}
+            options={{
+              title: "News Details Screen",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.teal,
+              },
+              headerTintColor: COLORS.white,
+            }}
+          />
+          <RootStack.Screen
+            name="VideoScreen"
+            component={VideoScreen}
+            options={{
+              title: "Video Screen",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.teal,
+              },
+              headerTintColor: COLORS.white,
+            }}
+          />
+          <RootStack.Screen
+            name="TimeSheetScreen"
+            component={TimeSheetScreen}
+            options={{
+              title: "Time Screen",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.teal,
+              },
+              headerTintColor: COLORS.white,
+            }}
+          />
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </TabContextProvider>
   );
 };
-
 export default RootNavigator;
