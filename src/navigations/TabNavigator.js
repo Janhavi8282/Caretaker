@@ -9,15 +9,30 @@ import { COLORS } from "../theme/theme";
 import AddButton from "../components/AddButton";
 import { useTabMenu } from "../context/TabContext";
 import ClockScreen from "../screens/ClockScreen";
-
+import { useRoute } from "@react-navigation/native";
+import { useState, useEffect } from "react";
 const Tab = createBottomTabNavigator();
+import { Provider } from "react-redux";
+import { setUserData } from "../components/store/actions";
+import { useDispatch } from "react-redux";
 
 const getIconColor = (focused) => ({
   tintColor: focused ? COLORS.teal : COLORS.dark,
 });
 
-const TabNavigator = () => {
+const TabNavigator = ({ navigation }) => {
   const { opened, toggleOpened } = useTabMenu();
+  const route = useRoute();
+  const userInfo = route.params?.userInfo;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("UserID");
+    console.log(userInfo?.userId);
+    dispatch(setUserData(userInfo));
+    return () => {};
+  }, []);
+
   return (
     <Tab.Navigator
       initialRouteName="Home"

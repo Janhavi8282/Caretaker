@@ -21,6 +21,7 @@ import { useRoute } from "@react-navigation/native";
 import moment from "moment";
 import { COLORS } from "../theme/theme";
 import NewsDetailScreen from "../screens/NewsDetailScreen";
+import { useSelector } from "react-redux";
 
 const HomeScreen = ({ navigation }) => {
   const route = useRoute();
@@ -37,6 +38,7 @@ const HomeScreen = ({ navigation }) => {
   let [isLoading, setisLoading] = useState(true);
   let [error, setError] = useState();
   let [response, setResponse] = useState();
+  const userData = useSelector((state) => state.userData);
 
   const getUpcomingWeekDates = () => {
     const dates = [];
@@ -68,9 +70,9 @@ const HomeScreen = ({ navigation }) => {
   // }, []);
 
   useEffect(() => {
-    console.log("UserName");
-    console.log(userInfo?.firstName);
-    console.log("AS" + userId);
+    console.log("////////UserID");
+    console.log(userData?.userId);
+    console.log(userData);
     getListNews();
     return () => {};
   }, []);
@@ -92,9 +94,6 @@ const HomeScreen = ({ navigation }) => {
         console.log("Error: ".error);
       })
       .finally(() => setisLoading(false));
-    console.log("===============UserID");
-    console.log(userInfo?.firstName);
-    // console.log(userID);
   };
 
   onClickItem = (item, index) => {
@@ -153,10 +152,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.notification}
       />  */}
       <View>
-        <Text style={styles.text}>Hello,{userInfo?.firstName ?? ""}</Text>
-      </View>
-      <View>
-        <Text style={styles.text}>Upcoming Shifts</Text>
+        <Text style={styles.text}>Week Shifts</Text>
       </View>
       <View style={styles.datecontainer}>
         {upcomingDates.map((date, index) => (
@@ -166,8 +162,8 @@ const HomeScreen = ({ navigation }) => {
               </Text> */}
             <Text key={index} style={styles.dateText}>
               {date.format("dd")}
+              {date.format("D")}
             </Text>
-            <Text style={styles.dateText}>{date.format("D")}</Text>
           </View>
         ))}
       </View>
