@@ -1,158 +1,246 @@
-import { StyleSheet, Text, TouchableOpacity, View, Button } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import axios from 'axios';
-import { GestureHandlerRootView, TextInput } from 'react-native-gesture-handler';
-import { useRoute } from '@react-navigation/native';
-import OpenShiftDetailsScreen from './OpenShiftDetailsScreen';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Button,
+  ActivityIndicator,
+  FlatList,
+  Image,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import axios from "axios";
+import {
+  GestureHandlerRootView,
+  TextInput,
+} from "react-native-gesture-handler";
+import { useRoute } from "@react-navigation/native";
+import moment from "moment";
+import { COLORS } from "../theme/theme";
+import NewsDetailScreen from "../screens/NewsDetailScreen";
 
-const Circle = () =>{
-  return <SafeAreaView style={styles.circle}/>
-};
-
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const route = useRoute();
   const userInfo = route.params?.userInfo;
+  const userId = route.params?.id;
+  const [data, setdata] = useState([]);
+  const [currentIndex, setcurrentIndex] = useState();
+  const [refFlatList, setrefFlatList] = useState();
+  const [newsId, setnewsId] = useState("");
+  const [id, setId] = useState("");
+  // const userfName = userInfo?.firstName;
+  // const userlName = userInfo?.lastName;
+  // const userID = userInfo?.userId;
+  let [isLoading, setisLoading] = useState(true);
+  let [error, setError] = useState();
+  let [response, setResponse] = useState();
 
-  return (
-    //search bar 
-    <SafeAreaView style={styles.container}>
-      <GestureHandlerRootView style={styles.row}>
-      <View style={styles.searchView}>
-        <Ionicons name="search" size={20} color="black" style={styles.searchBar}/>
-        <TextInput placeholder='Search'/>
-      </View>
-      <Ionicons name ='notifications-outline' size={30} style={styles.notification} onPress={() => navigation.navigate('NotificationScreen')}/>
-      </GestureHandlerRootView>
-      
-      {/* circle with nameof user who logged in
-       */}
-       <Circle/>
-      <Text style ={styles.text}>Hello,{userInfo?.firstName ?? ""}</Text>
-      
-      {/*Quick tasks */}
-      <View style={styles.row}>
-        <View>
-          <TouchableOpacity onPress={()=>navigation.navigate('ShiftScreen',{userInfo})} style={styles.columns}>
-            <AntDesign name='calendar' size={30} color='#008080'/>
-            <Text style={styles.rowIcon}>Shifts</Text>
-          </TouchableOpacity>
-        </View>
+  const getUpcomingWeekDates = () => {
+    const dates = [];
+    const today = moment();
 
-        <View>
-        <TouchableOpacity onPress={()=>navigation.navigate('ClockScreen')} style={styles.columns}>
-          <AntDesign name='clockcircleo' size={30}  color='#008080'/>
-          <Text style={styles.rowIcon}>Clock</Text>
-        </TouchableOpacity>
-        </View>
-        
-        <View>
-        <TouchableOpacity onPress={()=>navigation.navigate('AvailabilityScreen')} style={styles.columns}>
-          <Ionicons name='newspaper-outline' size={30}  color='#008080'/>
-          <Text style={styles.rowIcon}>Availability</Text>
-        </TouchableOpacity>
-        </View>
+    for (let i = 0; i < 7; i++) {
+      dates.push(today.clone().add(i, "days"));
+    }
 
-        <View>
-          <TouchableOpacity onPress={()=>navigation.navigate('ProfileScreen',{userInfo})} style={styles.columns}>
-            <Ionicons name='person-outline' size={30}   color='#008080'/>
-            <Text style={styles.rowIcon}>Profile</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+    return dates;
+  };
+  const upcomingDates = getUpcomingWeekDates();
 
-      {/* other notifications of home screen */}
-      <View>
-        <Text>Updates</Text>
-      </View>
+  // useEffect(() => {
+  //   fetch(
+  //     "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID"
+  //   )
+  //     .then((res) => res.json())
+  //     .then(
+  //       (result) => {
+  //         setIsLoading(false);
+  //         setResponse(result);
+  //       },
+  //       (error) => {
+  //         setIsLoading(false);
+  //         setError(error);
+  //       }
+  //     );
+  // }, []);
+
+  useEffect(() => {
+    console.log("UserName");
+    console.log(userInfo?.firstName);
+    console.log("AS" + userId);
+    getListNews();
+    return () => {};
+  }, []);
+
+  let getListNews = async () => {
+    const apiURL =
+      "https://lifeshaderapi.azurewebsites.net/api/NewsService/GetAllNews";
+    await fetch(apiURL)
+      .then((res) => res.json())
+      .then((resJson) => {
+        // Remove duplicates based on the newsId
+        const uniqueData = resJson.filter(
+          (item, index, self) =>
+            index === self.findIndex((i) => i.newsId === item.newsId)
+        );
+        setdata(uniqueData);
+      })
+      .catch((error) => {
+        console.log("Error: ".error);
+      })
+      .finally(() => setisLoading(false));
+    console.log("===============UserID");
+    console.log(userInfo?.firstName);
+    // console.log(userID);
+  };
+
+  onClickItem = (item, index) => {
+    setcurrentIndex(index);
+    const newArrData = data.map((e, index) => {
+      if (item.newsId == e.newsId) {
+        return {
+          ...e,
+          selected: true,
+        };
+      }
+      return {
+        ...e,
+        selected: false,
+      };
+    });
+    setdata(newArrData);
+  };
+
+  renderItem = ({ item, index }) => {
+    return (
       <TouchableOpacity
-          style={styles.rectangle}>
-            <View style={styles.rectangleView}>
-            <Text style={styles.textContent}>Hi Team...</Text>
-            <Text style={styles.textContent}>Just a quick notication that new shifts have been uploaded. Please check...</Text>
-            <Text style={styles.textContent}>Thank you and have a good day</Text>
-            </View>
+        onPress={() =>
+          navigation.navigate("NewsDetailScreen", {
+            newsHeading: `${item.newsHeading}`,
+            newsDescription: `${item.newsDescription}`,
+            photoLink: `${item.photoLink}`,
+          })
+        }
+        style={[
+          styles.item,
+          {
+            marginTop: 11,
+            height: 150,
+            backgroundColor: item.selected ? "#f0fff0" : "white",
+          },
+        ]}
+      >
+        <View style={{ height: 100, flexDirection: "row" }}>
+          <Image style={styles.image} source={{ uri: item.photoLink }}></Image>
+          <Text style={[styles.title]}>{item.newsHeading}</Text>
+        </View>
       </TouchableOpacity>
-      <Button title="Logout" color="red"></Button>
-    </SafeAreaView> 
-    
+    );
+  };
 
-   
-    
-  )
-}
+  getItemLayout = (data, index) => {
+    return { length: 161, offset: 161 * index, index };
+  };
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* <Text style={styles.text}>Hello,{userInfo?.firstName ?? ""}</Text>
+       <Ionicons
+       name="notifications-outline"
+         size={30}
+        style={styles.notification}
+      />  */}
+      <View>
+        <Text style={styles.text}>Hello,{userInfo?.firstName ?? ""}</Text>
+      </View>
+      <View>
+        <Text style={styles.text}>Upcoming Shifts</Text>
+      </View>
+      <View style={styles.datecontainer}>
+        {upcomingDates.map((date, index) => (
+          <View style={styles.datebox}>
+            {/* <Text key={index} style={styles.dateText}>
+                {date.format("MMM")}
+              </Text> */}
+            <Text key={index} style={styles.dateText}>
+              {date.format("dd")}
+            </Text>
+            <Text style={styles.dateText}>{date.format("D")}</Text>
+          </View>
+        ))}
+      </View>
+      <View>
+        <Text style={styles.text}>Latest News</Text>
+      </View>
+      <View style={styles.newscontainer}>
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
+            keyExtractor={(item1) => item1.newsId.toString()}
+            getItemLayout={getItemLayout}
+            ref={(ref) => setrefFlatList(ref)}
+          />
+        )}
+      </View>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#e5e5e5',
+    // height: 100,
+    // alignItems: "center",
+    // backgroundColor: "#e5e5e5",
   },
-  notification:{
+  text: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 15,
+    padding: 10,
   },
-  circle:{
+  datecontainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  datebox: {
+    padding: 10,
+    backgroundColor: COLORS.yellow,
+    margin: 5,
+  },
+  dateText: {
+    fontSize: 20,
+    color: COLORS.white,
+    fontWeight: "bold",
+  },
+  item: {
+    borderWidth: 0.5,
+    padding: 8,
+    borderRadius: 10,
+    justifyContent: "center",
+    paddingLeft: 16,
+    textAlign: "center",
+  },
+  image: {
     width: 100,
     height: 100,
-    borderRadius: 100/2,
-    backgroundColor: '#87CEEB',
-    shadowRadius: 5,
-    padding: 15,
-    marginTop: 40,
-    elevation: 8,
   },
-  text:{
-    padding: 4,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  row:{
-    alignItems: 'center',
-    flexDirection:'row',
-    justifyContent:'space-between',
-    paddingLeft: 5,
-    paddingRight: 5,
-  },
-  columns:{
-    backgroundColor:'transparent',
-    alignItems: 'center',
-    flexDirection:'column',
-    justifyContent:'space-between',
-    paddingLeft: 5,
-    paddingRight: 5,
-    margin:15,
-  },
-  searchView:{
-    padding: 3,
-    flexDirection: 'row',
-    width: '90%',
-    height: 40,
-    backgroundColor:'#D3D3D3',
-    borderRadius: 10,
-    margin: 10,
-  },
-  searchBar:{
-    marginLeft:2,
-    marginRight: 4,
-    alignSelf:'center',
-  },
-  rectangle:{
-    backgroundColor: '#0096FF',
+  title: {
+    flex: 1,
+    fontSize: 18,
+    marginLeft: 10,
     padding: 10,
-    height: '20%',
-    width: '100%',
   },
-  rectangleView:{
-    alignItems: 'center',
-    alignContent: 'center',
+  newscontainer: {
+    padding: 10,
   },
-  textContent:{
-    fontWeight: 'bold',
-    fontSize: 15,
-    color: '#000000',
-  }
-})
+});
 
-export default HomeScreen
-
+export default HomeScreen;
