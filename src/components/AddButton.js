@@ -12,6 +12,7 @@ import { COLORS } from "../theme/theme";
 import { useNavigation } from "@react-navigation/native";
 import VideoScreen from "../screens/VideoScreen";
 import NewsScreen from "../screens/NewsScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const AddButton = ({ opened, toggleOpened }) => {
   const animation = React.useRef(new Animated.Value(0)).current;
@@ -90,7 +91,7 @@ const AddButton = ({ opened, toggleOpened }) => {
             />
           </Animated.View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("ProfileScreen")}>
           <Animated.View
             style={[
               styles.item,

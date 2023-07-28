@@ -53,7 +53,7 @@ const RootNavigator = () => {
           <RootStack.Screen
             name="HomeScreen"
             component={HomeScreen}
-            options={{ headerShown: true, title: "Jahnavi" }}
+            options={{ headerShown: true }}
           />
           <RootStack.Screen name="MainTabs" component={TabNavigator} />
           <RootStack.Screen
@@ -97,7 +97,9 @@ const RootNavigator = () => {
           />
           <RootStack.Screen
             name="ForgotPasswordScreen"
+            title="Forgot Password"
             component={ForgotPasswordScreen}
+            options={{ headerShown: true }}
           />
           <RootStack.Screen
             name="AvailabilityScreen"
