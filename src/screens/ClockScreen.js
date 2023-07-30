@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import { COLORS } from "../theme/theme";
 import Modal from "react-native-modal";
+import TimeSheetScreen from "../screens/TimeSheetScreen";
+import { useSelector } from "react-redux";
 
 const ClockScreen = ({ navigation }) => {
   const [timer, setTimer] = useState(0);
@@ -24,24 +26,23 @@ const ClockScreen = ({ navigation }) => {
   const [endTime, setEndTime] = useState(null);
   const timerRef = useRef(null);
   const [realTimeData, setRealTimeData] = useState([]);
+  const userData = useSelector((state) => state.userData);
+
+  const [isClockIn, setIsClockIn] = useState(false);
+  const [clockInData, setClockInData] = useState(null);
 
   // function to handle the start button press
   const handleStart = () => {
-    setDisplayMessage("You are on Clock!");
-    setIsActive(true);
-    setIsPaused(false);
-
-    setStartTime(new Date());
-    setRealTimeData([]);
-
-    countRef.current = setInterval(() => {
-      setTimer((timer) => timer + 1);
-    }, 1000);
-
-    timerRef.current = setInterval(() => {
-      const currentTime = new Date().toLocaleTimeString();
-      setRealTimeData((prevData) => [...prevData, currentTime]);
-    }, 1000);
+    Alert.alert("Confirmation", "Are you want to start your shift?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Yes",
+        onPress: handleClcokInConfirmation,
+      },
+    ]);
   };
   // function to handle the pause button press
   const handlePause = () => {
@@ -76,7 +77,7 @@ const ClockScreen = ({ navigation }) => {
       },
       {
         text: "Save",
-        onPress: handleConfirmation,
+        onPress: handleClcokOutConfirmation,
       },
     ]);
   };
@@ -89,16 +90,112 @@ const ClockScreen = ({ navigation }) => {
     }
     return "";
   };
-  // Function to handle the confirmation (when the user confirms)
-  const handleConfirmation = async () => {
-    // Perform the action you want after the user confirms (e.g., save data, delete data, etc.)
-    // ...
+
+  const handleClcokInConfirmation = async () => {
+    setDisplayMessage("You are on Clock!");
+    setIsActive(true);
+    setIsPaused(false);
+
+    setStartTime(new Date());
+    setRealTimeData([]);
+
+    countRef.current = setInterval(() => {
+      setTimer((timer) => timer + 1);
+    }, 1000);
+
+    timerRef.current = setInterval(() => {
+      const currentTime = new Date().toLocaleTimeString();
+      setRealTimeData((prevData) => [...prevData, currentTime]);
+    }, 1000);
     console.log(startTime);
     console.log(endTime);
     console.log("===========");
     console.log(realTimeData[0]);
     console.log(realTimeData[realTimeData.length - 1]);
     console.log(getTimeDifference());
+    try {
+      const userId = userData.userID;
+      const payload = {
+        assignmentId: 3,
+        clockInTime: new Date().toISOString(),
+      };
+      const response = await fetch(
+        "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/UpdateClockInTime",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+      console.log(data);
+      setIsClockIn(true);
+      setClockInData(data);
+    } catch (error) {
+      console.error("Error updating clock-in time: ", error);
+    }
+  };
+  const handleClcokOutConfirmation = async () => {
+    try {
+      const userId = userData.userID;
+      const payload = {
+        assignmentId: 3,
+        clockOutTime: new Date().toISOString(),
+      };
+      const response = await fetch(
+        "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/UpdateClockOutTime",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error updating clock-out time: ", error);
+      // Handle the error as needed
+    }
+  };
+  const handleTimeSheet = async () => {
+    const id = userData?.userId;
+    console.log(userData?.userId);
+
+    fetch(
+      `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetMyShifts?id=${id}`
+    )
+      .then((response) => response.json())
+      .then((shiftIds) => {
+        Promise.all(
+          shiftIds.map((shiftId) => {
+            console.log("==========");
+            console.log(shiftId.shiftId);
+            return fetch(
+              `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID?id=${shiftId.shiftId}`
+            ).then((response) => response.json());
+          })
+        )
+          .then((shiftDetails) => {
+            const completedShifts = shiftDetails.filter(
+              (shift) => shift.status === "COMPLETE"
+            );
+            console.log(shiftDetails);
+            console.log(shiftIds);
+            navigation.navigate("TimeSheetScreen", { completedShifts });
+          })
+          .catch((error) => {
+            console.error("Error fetching shift details: ", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching shift IDs: ", error);
+      });
   };
 
   // calculate the time values for display
@@ -120,13 +217,11 @@ const ClockScreen = ({ navigation }) => {
       >
         <TouchableOpacity
           style={styles.TimeSheetbutton}
-          // onPress={() => this.props.navigation.navigate("TimeSheetScreen")}
-          // onPress={() => navigation.navigate("TimeSheet")}
+          onPress={handleTimeSheet}
         >
           <Text style={styles.buttonText}>Time Sheet</Text>
         </TouchableOpacity>
         <Text style={styles.clockText}>{displayMessage}</Text>
-
         <View style={styles.timerContainer}>
           <Text style={styles.timer}>{formatTime(timer)}</Text>
         </View>
@@ -155,7 +250,6 @@ const ClockScreen = ({ navigation }) => {
           )}
         </View>
       </View>
-      <Text>{getTimeDifference()}</Text>
     </SafeAreaView>
   );
 };
@@ -200,9 +294,11 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   TimeSheetbutton: {
+    position: "absolute",
+    top: 16, // Adjust the top position as per your preference
+    right: 16, // Adjust the right position as per your preference
     alignItems: "center",
     padding: 10,
-    marginTop: 16,
     fontSize: 50,
     backgroundColor: COLORS.yellow,
     borderRadius: 10,
@@ -211,6 +307,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textAlign: "center",
     marginBottom: 16,
+    marginTop: 75,
   },
 });
 export default ClockScreen;

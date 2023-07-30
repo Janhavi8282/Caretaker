@@ -146,7 +146,7 @@ const RootNavigator = () => {
             name="TimeSheetScreen"
             component={TimeSheetScreen}
             options={{
-              title: "Time Screen",
+              title: "Time Sheet",
               headerShown: true,
               headerStyle: {
                 backgroundColor: COLORS.teal,

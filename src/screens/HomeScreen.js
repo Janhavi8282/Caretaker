@@ -32,9 +32,7 @@ const HomeScreen = ({ navigation }) => {
   const [refFlatList, setrefFlatList] = useState();
   const [newsId, setnewsId] = useState("");
   const [id, setId] = useState("");
-  // const userfName = userInfo?.firstName;
-  // const userlName = userInfo?.lastName;
-  // const userID = userInfo?.userId;
+
   let [isLoading, setisLoading] = useState(true);
   let [error, setError] = useState();
   let [response, setResponse] = useState();
@@ -143,17 +141,12 @@ const HomeScreen = ({ navigation }) => {
   getItemLayout = (data, index) => {
     return { length: 161, offset: 161 * index, index };
   };
+  const keyExtractor = (item, index) => {
+    return item.newsId.toString() + index.toString();
+  };
   return (
     <SafeAreaView style={styles.container}>
-      {/* <Text style={styles.text}>Hello,{userInfo?.firstName ?? ""}</Text>
-       <Ionicons
-       name="notifications-outline"
-         size={30}
-        style={styles.notification}
-      />  */}
-      <View>
-        <Text style={styles.text}>Week Shifts</Text>
-      </View>
+      <Text style={styles.text}>Week Shifts</Text>
       <View style={styles.datecontainer}>
         {upcomingDates.map((date, index) => (
           <View style={styles.datebox}>
@@ -161,24 +154,31 @@ const HomeScreen = ({ navigation }) => {
                 {date.format("MMM")}
               </Text> */}
             <Text key={index} style={styles.dateText}>
-              {date.format("dd")}
+              {date.format("ddd")}
+              {"\n"}
               {date.format("D")}
             </Text>
           </View>
         ))}
       </View>
-      <View>
-        <Text style={styles.text}>Latest News</Text>
-      </View>
+      <Text style={styles.text}>Latest News</Text>
       <View style={styles.newscontainer}>
         {isLoading ? (
           <ActivityIndicator />
         ) : (
+          // <FlatList
+          //   data={data}
+          //   renderItem={renderItem}
+          //   // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
+          //   keyExtractor={(item1) => item1.newsId.toString()}
+          //   getItemLayout={getItemLayout}
+          //   ref={(ref) => setrefFlatList(ref)}
+          // />
           <FlatList
             data={data}
             renderItem={renderItem}
             // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
-            keyExtractor={(item1) => item1.newsId.toString()}
+            keyExtractor={keyExtractor}
             getItemLayout={getItemLayout}
             ref={(ref) => setrefFlatList(ref)}
           />
@@ -191,15 +191,11 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // height: 100,
-    // alignItems: "center",
-    // backgroundColor: "#e5e5e5",
   },
   text: {
     fontSize: 20,
     fontWeight: "bold",
     marginLeft: 15,
-    padding: 10,
   },
   datecontainer: {
     flexDirection: "row",
@@ -207,14 +203,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   datebox: {
-    padding: 10,
+    padding: 3,
     backgroundColor: COLORS.yellow,
+    textAlign: "center",
     margin: 5,
   },
   dateText: {
     fontSize: 20,
     color: COLORS.white,
     fontWeight: "bold",
+    textAlign: "center",
   },
   item: {
     borderWidth: 0.5,
@@ -232,10 +230,10 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 18,
     marginLeft: 10,
-    padding: 10,
   },
   newscontainer: {
     padding: 10,
+    borderColor: COLORS.white,
   },
 });
 
