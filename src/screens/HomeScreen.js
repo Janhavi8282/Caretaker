@@ -3,20 +3,12 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Button,
   ActivityIndicator,
   FlatList,
   Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import axios from "axios";
-import {
-  GestureHandlerRootView,
-  TextInput,
-} from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 import moment from "moment";
 import { COLORS } from "../theme/theme";
@@ -37,51 +29,33 @@ const HomeScreen = ({ navigation }) => {
   let [error, setError] = useState();
   let [response, setResponse] = useState();
   const userData = useSelector((state) => state.userData);
+  let [shiftDate, setShiftDate] = useState([]);
 
   const getUpcomingWeekDates = () => {
     const dates = [];
     const today = moment();
-
     for (let i = 0; i < 7; i++) {
       dates.push(today.clone().add(i, "days"));
     }
-
     return dates;
   };
   const upcomingDates = getUpcomingWeekDates();
-
-  // useEffect(() => {
-  //   fetch(
-  //     "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID"
-  //   )
-  //     .then((res) => res.json())
-  //     .then(
-  //       (result) => {
-  //         setIsLoading(false);
-  //         setResponse(result);
-  //       },
-  //       (error) => {
-  //         setIsLoading(false);
-  //         setError(error);
-  //       }
-  //     );
-  // }, []);
+  const formattedDates = upcomingDates.map((originalDate) =>
+    moment(originalDate).format("YYYY-MM-DD")
+  );
 
   useEffect(() => {
-    console.log("////////UserID");
-    console.log(userData?.userId);
-    console.log(userData);
     getListNews();
+    getShiftDates();
     return () => {};
   }, []);
 
-  let getListNews = async () => {
+  const getListNews = async () => {
     const apiURL =
       "https://lifeshaderapi.azurewebsites.net/api/NewsService/GetAllNews";
     await fetch(apiURL)
       .then((res) => res.json())
       .then((resJson) => {
-        // Remove duplicates based on the newsId
         const uniqueData = resJson.filter(
           (item, index, self) =>
             index === self.findIndex((i) => i.newsId === item.newsId)
@@ -92,6 +66,39 @@ const HomeScreen = ({ navigation }) => {
         console.log("Error: ".error);
       })
       .finally(() => setisLoading(false));
+  };
+  const getShiftDates = async () => {
+    const id = userData?.userId;
+    console.log(userData?.userId);
+    fetch(
+      `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetMyShifts?id=${id}`
+    )
+      .then((response) => response.json())
+      .then((shiftIds) => {
+        Promise.all(
+          shiftIds.map((shiftId) => {
+            return fetch(
+              `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID?id=${shiftId.shiftId}`
+            ).then((response) => response.json());
+          })
+        )
+          .then((shiftDetails) => {
+            const completedShifts = shiftDetails.filter(
+              (shift) => shift.status === "COMPLETE"
+            );
+
+            shiftDetails.forEach((item) => {
+              const date = item.date;
+              setShiftDate(moment(date).format("YYYY-MM-DD"));
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching shift details: ", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching shift IDs: ", error);
+      });
   };
 
   onClickItem = (item, index) => {
@@ -144,22 +151,28 @@ const HomeScreen = ({ navigation }) => {
   const keyExtractor = (item, index) => {
     return item.newsId.toString() + index.toString();
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Week Shifts</Text>
       <View style={styles.datecontainer}>
-        {upcomingDates.map((date, index) => (
-          <View style={styles.datebox}>
-            {/* <Text key={index} style={styles.dateText}>
-                {date.format("MMM")}
-              </Text> */}
-            <Text key={index} style={styles.dateText}>
-              {date.format("ddd")}
-              {"\n"}
-              {date.format("D")}
-            </Text>
-          </View>
-        ))}
+        {formattedDates.map((date, index) => {
+          const isDateInSecondList = (date) => shiftDate.includes(date);
+          return (
+            <View style={styles.datebox}>
+              <Text
+                key={index}
+                style={
+                  isDateInSecondList(date) ? styles.dateText1 : styles.dateText
+                }
+              >
+                {moment(date).format("MMM")}
+                {"\n"}
+                {moment(date).format("DD")}
+              </Text>
+            </View>
+          );
+        })}
       </View>
       <Text style={styles.text}>Latest News</Text>
       <View style={styles.newscontainer}>
@@ -207,6 +220,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.yellow,
     textAlign: "center",
     margin: 5,
+  },
+  dateText1: {
+    fontSize: 20,
+    color: COLORS.teal,
+    fontWeight: "bold",
+    textAlign: "center",
   },
   dateText: {
     fontSize: 20,
