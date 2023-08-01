@@ -116,6 +116,7 @@ const HomeScreen = ({ navigation }) => {
   renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
+        key={item.newsId.toString()}
         onPress={() =>
           navigation.navigate("NewsDetailScreen", {
             newsHeading: `${item.newsHeading}`,
@@ -143,6 +144,11 @@ const HomeScreen = ({ navigation }) => {
   getItemLayout = (data, index) => {
     return { length: 161, offset: 161 * index, index };
   };
+
+  const keyExtractor = (item, index) => {
+    return item.newsId.toString();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* <Text style={styles.text}>Hello,{userInfo?.firstName ?? ""}</Text>
@@ -152,6 +158,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.notification}
       />  */}
       <View>
+        <Text>Hello,{userData?.firstName}</Text>
         <Text style={styles.text}>Week Shifts</Text>
       </View>
       <View style={styles.datecontainer}>
@@ -178,7 +185,7 @@ const HomeScreen = ({ navigation }) => {
             data={data}
             renderItem={renderItem}
             // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
-            keyExtractor={(item1) => item1.newsId.toString()}
+            keyExtractor={keyExtractor}
             getItemLayout={getItemLayout}
             ref={(ref) => setrefFlatList(ref)}
           />
