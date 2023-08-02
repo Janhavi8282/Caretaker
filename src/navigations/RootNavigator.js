@@ -19,6 +19,7 @@ import NewsDetailScreen from "../screens/NewsDetailScreen";
 import { TabContextProvider } from "../context/TabContext";
 import TimeSheetScreen from "../screens/TimeSheetScreen";
 import VideoScreen from "../screens/VideoScreen";
+import InvoiceScreen from "../screens/InvoiceScreen";
 import { COLORS } from "../theme/theme";
 
 const RootStack = createNativeStackNavigator();
@@ -147,6 +148,18 @@ const RootNavigator = () => {
             component={TimeSheetScreen}
             options={{
               title: "Time Sheet",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.teal,
+              },
+              headerTintColor: COLORS.white,
+            }}
+          />
+          <RootStack.Screen
+            name="InvoiceScreen"
+            component={InvoiceScreen}
+            options={{
+              title: "Invoice",
               headerShown: true,
               headerStyle: {
                 backgroundColor: COLORS.teal,

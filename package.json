@@ -18,6 +18,8 @@
     "date-fns": "^2.30.0",
     "expo": "~48.0.18",
     "expo-av": "~13.2.1",
+    "expo-file-system": "^15.4.2",
+    "expo-sharing": "^11.5.0",
     "expo-status-bar": "~1.4.4",
     "firebase": "^9.22.2",
     "moment": "^2.29.4",
