@@ -1,13 +1,16 @@
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
+import { useSelector } from "react-redux";
 
 const RequestedShiftsscreen = ({ navigation }) => {
   const route = useRoute();
   const [requestedShifts, setRequestedShifts] = useState([]);
   const [shiftNames, setShiftNames] = useState({});
   const userInfo = route.params?.userInfo;
-  const { userId } = userInfo;
+
+  const userData = useSelector((state) => state.userData);
+  const userId = userData?.userId;
 
   useEffect(() => {
     //API call to fetch data
@@ -58,10 +61,8 @@ const RequestedShiftsscreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {requestedShifts.map((shift) => (
-        <View style={styles.rectangle}>
-          <Text key={shift.shiftRequest} style={styles.text}>
-            {shiftNames[shift.shiftId]}
-          </Text>
+        <View style={styles.rectangle} key={shift.shiftRequest}>
+          <Text style={styles.text}>{shiftNames[shift.shiftId]}</Text>
         </View>
       ))}
     </ScrollView>
