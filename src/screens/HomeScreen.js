@@ -8,28 +8,23 @@ import {
   Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRoute } from "@react-navigation/native";
 import moment from "moment";
 import { COLORS } from "../theme/theme";
 import NewsDetailScreen from "../screens/NewsDetailScreen";
 import { useSelector } from "react-redux";
 
 const HomeScreen = ({ navigation }) => {
-  const route = useRoute();
-  const userInfo = route.params?.userInfo;
-  const userId = route.params?.id;
   const [data, setdata] = useState([]);
   const [currentIndex, setcurrentIndex] = useState();
   const [refFlatList, setrefFlatList] = useState();
   const [newsId, setnewsId] = useState("");
-  const [id, setId] = useState("");
-
+  let [shiftDate, setShiftDate] = useState([]);
   let [isLoading, setisLoading] = useState(true);
   let [error, setError] = useState();
   let [response, setResponse] = useState();
+
   const userData = useSelector((state) => state.userData);
-  let [shiftDate, setShiftDate] = useState([]);
+  const id = userData?.userId;
 
   const getUpcomingWeekDates = () => {
     const dates = [];
@@ -51,25 +46,35 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   const getListNews = async () => {
-    const apiURL =
-      "https://lifeshaderapi.azurewebsites.net/api/NewsService/GetAllNews";
+    const apiURL = `https://lifeshaderapi.azurewebsites.net/api/NewsService/GetUserNewsByUserID?id=${id}`;
     await fetch(apiURL)
       .then((res) => res.json())
       .then((resJson) => {
-        const uniqueData = resJson.filter(
-          (item, index, self) =>
-            index === self.findIndex((i) => i.newsId === item.newsId)
-        );
-        setdata(uniqueData);
+        Promise.all(
+          resJson.map((newsId) => {
+            return fetch(
+              `https://lifeshaderapi.azurewebsites.net/api/NewsService/GetNewsByID?id=${newsId.newsId}`
+            ).then((response) => response.json());
+          })
+        )
+          .then((resJson) => {
+            const uniqueData = resJson.filter(
+              (item, index, self) =>
+                index === self.findIndex((i) => i.newsId === item.newsId)
+            );
+            setdata(uniqueData);
+          })
+          .catch((error) => {
+            console.error("Error fetching News details: ", error);
+          });
       })
       .catch((error) => {
         console.log("Error: ".error);
       })
       .finally(() => setisLoading(false));
   };
+
   const getShiftDates = async () => {
-    const id = userData?.userId;
-    console.log(userData?.userId);
     fetch(
       `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetMyShifts?id=${id}`
     )
@@ -84,7 +89,7 @@ const HomeScreen = ({ navigation }) => {
         )
           .then((shiftDetails) => {
             const completedShifts = shiftDetails.filter(
-              (shift) => shift.status === "COMPLETE"
+              (shift) => shift.status === "INPROGRESS"
             );
 
             shiftDetails.forEach((item) => {
@@ -131,13 +136,19 @@ const HomeScreen = ({ navigation }) => {
         style={[
           styles.item,
           {
-            marginTop: 11,
+            margin: 10,
             height: 150,
+            borderColor: COLORS.white,
             backgroundColor: item.selected ? "#f0fff0" : "white",
           },
         ]}
       >
-        <View style={{ height: 100, flexDirection: "row" }}>
+        <View
+          style={{
+            height: 100,
+            flexDirection: "row",
+          }}
+        >
           <Image style={styles.image} source={{ uri: item.photoLink }}></Image>
           <Text style={[styles.title]}>{item.newsHeading}</Text>
         </View>
@@ -153,7 +164,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.text}>Week Shifts</Text>
       <View style={styles.datecontainer}>
         {formattedDates.map((date, index) => {
@@ -197,7 +208,7 @@ const HomeScreen = ({ navigation }) => {
           />
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -208,7 +219,8 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: "bold",
-    marginLeft: 15,
+    marginLeft: 5,
+    marginTop: 5,
   },
   datecontainer: {
     flexDirection: "row",
@@ -216,22 +228,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   datebox: {
-    padding: 3,
-    backgroundColor: COLORS.yellow,
     textAlign: "center",
     margin: 5,
   },
   dateText1: {
-    fontSize: 20,
-    color: COLORS.teal,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  dateText: {
+    padding: 3,
     fontSize: 20,
     color: COLORS.white,
+    backgroundColor: COLORS.teal,
     fontWeight: "bold",
     textAlign: "center",
+    borderRadius: 50,
+  },
+  dateText: {
+    padding: 3,
+    fontSize: 20,
+    color: COLORS.white,
+    backgroundColor: COLORS.yellow,
+    fontWeight: "bold",
+    textAlign: "center",
+    borderRadius: 50,
   },
   item: {
     borderWidth: 0.5,
@@ -251,8 +267,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   newscontainer: {
-    padding: 10,
-    borderColor: COLORS.white,
+    flex: 1,
   },
 });
 

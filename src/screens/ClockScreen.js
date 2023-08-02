@@ -60,16 +60,6 @@ const ClockScreen = ({ navigation }) => {
   };
   // function to handle the reset button press
   const handleStop = () => {
-    setDisplayMessage("You are off Clock");
-
-    setEndTime(new Date());
-    clearInterval(timerRef.current);
-
-    clearInterval(countRef.current);
-    setIsActive(false);
-    setIsPaused(false);
-    setTimer(0);
-
     Alert.alert("Confirmation", "Are you sure you want to stop the clcok?", [
       {
         text: "Cancel",
@@ -109,60 +99,91 @@ const ClockScreen = ({ navigation }) => {
     }, 1000);
     console.log(startTime);
     console.log(endTime);
-    console.log("===========");
     console.log(realTimeData[0]);
     console.log(realTimeData[realTimeData.length - 1]);
     console.log(getTimeDifference());
-    try {
-      const userId = userData.userID;
-      const payload = {
-        assignmentId: 3,
-        clockInTime: new Date().toISOString(),
-      };
-      const response = await fetch(
-        "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/UpdateClockInTime",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      const data = await response.json();
-      console.log(data);
-      setIsClockIn(true);
-      setClockInData(data);
-    } catch (error) {
-      console.error("Error updating clock-in time: ", error);
-    }
+    fetch(
+      "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/UpdateClockInTime",
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          assignmentId: 2,
+          clockInTime: new Date().toISOString(),
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((responseClockInData) => {
+        console.log(JSON.stringify(responseClockInData));
+      })
+      .done();
   };
   const handleClcokOutConfirmation = async () => {
-    try {
-      const userId = userData.userID;
-      const payload = {
-        assignmentId: 3,
-        clockOutTime: new Date().toISOString(),
-      };
-      const response = await fetch(
-        "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/UpdateClockOutTime",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+    setDisplayMessage("You are off Clock");
 
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error("Error updating clock-out time: ", error);
-      // Handle the error as needed
-    }
+    setEndTime(new Date());
+    clearInterval(timerRef.current);
+
+    clearInterval(countRef.current);
+    setIsActive(false);
+    setIsPaused(false);
+    setTimer(0);
+
+    const payload = {
+      assignmentId: 2,
+      clockOutTime: new Date().toISOString(),
+    };
+
+    console.log(payload);
+    fetch(
+      "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/UpdateClockOutTime",
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          assignmentId: 2,
+          clockInTime: new Date().toISOString(),
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((responseClockOutData) => {
+        console.log("===========");
+        console.log(JSON.stringify(responseClockOutData));
+      })
+      .done();
+
+    // try {
+    //   const userId = userData.userID;
+    //   const payload = {
+    //     assignmentId: 3,
+    //     clockOutTime: new Date().toISOString(),
+    //   };
+    //   const response = await fetch(
+    //     "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/UpdateClockOutTime",
+    //     {
+    //       method: "PUT",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify(payload),
+    //     }
+    //   );
+
+    //   const data = await response.json();
+    //   console.log(data);
+    // } catch (error) {
+    //   console.error("Error updating clock-out time: ", error);
+    // }
   };
+
   const handleTimeSheet = async () => {
     const id = userData?.userId;
     console.log(userData?.userId);
@@ -295,8 +316,8 @@ const styles = StyleSheet.create({
   },
   TimeSheetbutton: {
     position: "absolute",
-    top: 16, // Adjust the top position as per your preference
-    right: 16, // Adjust the right position as per your preference
+    top: 16,
+    right: 16,
     alignItems: "center",
     padding: 10,
     fontSize: 50,
