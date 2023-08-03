@@ -22,6 +22,7 @@ const OpenShiftsScreen = ({ navigation }) => {
   //state for response that we get from api
   let [response, setResponse] = useState();
   const userData = useSelector((state) => state.userData);
+  //Get the requested shifts ids array from the Requestedscreen component
 
   useEffect(() => {
     fetch(
