@@ -6,14 +6,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { Divider } from "react-native-paper";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
-const OpenShiftsScreen = ({ navigation }) => {
-  const route = useRoute();
+const OpenShiftsScreen = ({ navigation, route }) => {
   const userInfo = route.params?.userInfo;
   //use state will show the loading state of api. It si set true so it will show the activity indicator for the first
   let [isLoading, setIsLoading] = useState(true);
@@ -22,9 +22,12 @@ const OpenShiftsScreen = ({ navigation }) => {
   //state for response that we get from api
   let [response, setResponse] = useState();
   const userData = useSelector((state) => state.userData);
-  //Get the requested shifts ids array from the Requestedscreen component
+  const userId = userData?.userId;
+  //Get the requested shifts from the Requestedscreen component
+  const { requestedShifts } = route.params;
 
   useEffect(() => {
+    //Fetch available shifts
     fetch(
       "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetAvailableShifts"
     )
@@ -52,9 +55,18 @@ const OpenShiftsScreen = ({ navigation }) => {
     if (!response) {
       return <Text>No shifts available</Text>;
     }
+
+    //Filter out the shifts that are requested
+    const availableShifts = response.filter(
+      (shift) =>
+        !requestedShifts.some(
+          (requestedShift) => requestedShift.shiftId === shift.shiftId
+        )
+    );
+
     return (
-      <View>
-        {response.map((shift, index) => {
+      <ScrollView>
+        {availableShifts.map((shift, index) => {
           //for getting the month from date
           const shiftDate = new Date(shift.date);
 
@@ -125,7 +137,7 @@ const OpenShiftsScreen = ({ navigation }) => {
             </View>
           );
         })}
-      </View>
+      </ScrollView>
     );
   };
   return <View style={styles.container}>{getContent()}</View>;

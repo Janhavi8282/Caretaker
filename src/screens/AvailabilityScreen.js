@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../components/CustomButton/CustomButton";
 import { useSelector } from "react-redux";
@@ -64,7 +64,7 @@ const AvailabilityScreen = ({ navigation }) => {
     );
   }
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       {availability.map((item) => {
         //split date and day seperately
         const date = new Date(item.date);
@@ -75,7 +75,7 @@ const AvailabilityScreen = ({ navigation }) => {
           year: "numeric",
         });
         return (
-          <View key={item.availabilityId} style={styles.infoContainer}>
+          <View style={styles.infoContainer} key={item.availabilityId}>
             <Text style={styles.text}>{formattedDate}</Text>
             <Text style={styles.text}>{dayOfWeek}</Text>
             <Text style={styles.text}>
@@ -92,7 +92,7 @@ const AvailabilityScreen = ({ navigation }) => {
         text="Edit Availability"
         onPress={() => setIsEditing(true)}
       />
-    </View>
+    </ScrollView>
   );
 };
 

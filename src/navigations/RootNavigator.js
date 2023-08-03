@@ -20,6 +20,7 @@ import { TabContextProvider } from "../context/TabContext";
 import TimeSheetScreen from "../screens/TimeSheetScreen";
 import VideoScreen from "../screens/VideoScreen";
 import EditAvailabilityScreen from "../screens/EditAvailabilityScreen";
+import EditProfilescreen from "../screens/EditProfilescreen";
 import { COLORS } from "../theme/theme";
 
 const RootStack = createNativeStackNavigator();
@@ -65,6 +66,15 @@ const RootNavigator = () => {
           <RootStack.Screen
             name="ProfileScreen"
             component={ProfileScreen}
+            options={{
+              headerShown: true,
+              title: "Profile",
+              headerTitleAlign: "center",
+            }}
+          />
+          <RootStack.Screen
+            name="EditProfilescreen"
+            component={EditProfilescreen}
             options={{
               headerShown: true,
               title: "Profile",

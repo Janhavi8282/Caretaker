@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
@@ -104,7 +105,11 @@ const YourShiftsScreen = ({ navigation }) => {
       </View>
     );
   };
-  return <View style={styles.container}>{getContent()}</View>;
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      {getContent()}
+    </ScrollView>
+  );
 };
 
 const styles = StyleSheet.create({

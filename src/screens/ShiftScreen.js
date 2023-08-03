@@ -1,13 +1,18 @@
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import IconFontAwesome from "react-native-vector-icons/FontAwesome5";
 import { useRoute } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import OpenShiftsScreen from "./OpenShiftsScreen";
 
 const ShiftScreen = ({ navigation }) => {
   const route = useRoute();
   const userInfo = route.params?.userInfo;
+  const userData = useSelector((state) => state.userData);
+  const userId = userData?.userId;
+  const [requestedShifts, setRequestedShifts] = useState([]);
   return (
     <View style={styles.container}>
       <GestureHandlerRootView>
@@ -20,7 +25,12 @@ const ShiftScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("OpenShiftsScreen", { userInfo })}
+          onPress={() =>
+            navigation.navigate("OpenShiftsScreen", {
+              userData: userData,
+              requestedShifts: requestedShifts,
+            })
+          }
           style={styles.button}
         >
           <Text style={styles.text}>Open shifts</Text>
@@ -29,7 +39,7 @@ const ShiftScreen = ({ navigation }) => {
 
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate("RequestedShiftsscreen", { userInfo })
+            navigation.navigate("RequestedShiftsscreen", { userData })
           }
           style={styles.button}
         >
