@@ -46,12 +46,16 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   const getListNews = async () => {
+    const id = userData?.userId;
+    console.log("userid: ", id);
     const apiURL = `https://lifeshaderapi.azurewebsites.net/api/NewsService/GetUserNewsByUserID?id=${id}`;
     await fetch(apiURL)
       .then((res) => res.json())
       .then((resJson) => {
         Promise.all(
           resJson.map((newsId) => {
+            console.log("Newsid: ", newsId.newsId);
+
             return fetch(
               `https://lifeshaderapi.azurewebsites.net/api/NewsService/GetNewsByID?id=${newsId.newsId}`
             ).then((response) => response.json());
@@ -73,38 +77,71 @@ const HomeScreen = ({ navigation }) => {
       })
       .finally(() => setisLoading(false));
   };
-
   const getShiftDates = async () => {
-    fetch(
-      `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetMyShifts?id=${id}`
-    )
-      .then((response) => response.json())
-      .then((shiftIds) => {
-        Promise.all(
-          shiftIds.map((shiftId) => {
-            return fetch(
-              `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID?id=${shiftId.shiftId}`
-            ).then((response) => response.json());
-          })
-        )
-          .then((shiftDetails) => {
-            const completedShifts = shiftDetails.filter(
-              (shift) => shift.status === "INPROGRESS"
-            );
+    try {
+      const response = await fetch(
+        `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetMyShifts?id=${id}`
+      );
+      const shiftIds = await response.json();
 
-            shiftDetails.forEach((item) => {
-              const date = item.date;
-              setShiftDate(moment(date).format("YYYY-MM-DD"));
-            });
-          })
-          .catch((error) => {
-            console.error("Error fetching shift details: ", error);
-          });
-      })
-      .catch((error) => {
-        console.error("Error fetching shift IDs: ", error);
+      const shiftDetailsPromises = shiftIds.map((shiftId) => {
+        console.log("shiftID: ", shiftId.shiftId);
+        return fetch(
+          `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID?id=${shiftId.shiftId}`
+        ).then((response) => response.json());
       });
+
+      const shiftDetails = await Promise.all(shiftDetailsPromises);
+      const completedShifts = shiftDetails.filter(
+        (shift) => shift.status === "INPROGRESS"
+      );
+
+      // Extract dates from completedShifts and store in shiftDates array
+      const shiftDates = completedShifts.map((item) =>
+        moment(item.date).format("YYYY-MM-DD")
+      );
+
+      setShiftDate(shiftDates);
+    } catch (error) {
+      console.error("Error fetching shift details: ", error);
+    }
   };
+
+  // const getShiftDates = async () => {
+  //   fetch(
+  //     `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetMyShifts?id=${id}`
+  //   )
+  //     .then((response) => response.json())
+  //     .then((shiftIds) => {
+  //       Promise.all(
+  //         shiftIds.map((shiftId) => {
+  //           console.log("shiftID: ", shiftId.shiftId);
+  //           return fetch(
+  //             `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID?id=${shiftId.shiftId}`
+  //           )
+  //             .then((response) => response.json())
+  //             .then((shiftDetails) => {
+  //               console.log("-----shift: ", shiftDetails);
+  //               const completedShifts = shiftDetails.filter(
+  //                 (shift) => shift.status === "INPROGRESS"
+  //               );
+  //               console.log("completedShifts: ", completedShifts);
+  //               shiftDetails.forEach((item) => {
+  //                 const date = item.date;
+  //                 setShiftDate(moment(date).format("YYYY-MM-DD"));
+  //               });
+  //               console.log("shiftdate: ", shiftDate[0]);
+  //             })
+  //             .catch((error) => {
+  //               console.error("Error fetching shift details: ", error);
+  //             });
+  //         })
+  //       );
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching shift IDs: ", error);
+  //     });
+  // };
 
   onClickItem = (item, index) => {
     setcurrentIndex(index);
@@ -226,6 +263,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    margin: 3,
   },
   datebox: {
     textAlign: "center",

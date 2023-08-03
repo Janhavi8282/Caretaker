@@ -1,10 +1,19 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, Linking } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Linking,
+  TouchableOpacity,
+} from "react-native";
 import Logo from "../../assets/loginImage.jpg";
 // import * as Linking from "react-native-linking";
 
 const AboutScreen = ({ navigation }) => {
-  const handleEmailPress = () => {
+  const handleEmailLink = () => {
+    console.log("handleEmailLink function called");
+    const email = "support@thekarmastaffing.com"; // Replace with the email address you want to use
     Linking.openURL(
       "mailto:support@thekarmastaffing.com?subject=Feedback&body=Hi%20there,"
     );
@@ -24,9 +33,9 @@ const AboutScreen = ({ navigation }) => {
         professionals who are passionate about what they do. If you have any
         questions or feedback, please do not hesitate to contact us.
       </Text>
-      <Text style={styles.text} onPress={handleEmailPress}>
-        Email: support@thekarmastaffing.com
-      </Text>
+      <TouchableOpacity onPress={handleEmailLink}>
+        <Text style={styles.text}>Email: support@thekarmastaffing.com</Text>
+      </TouchableOpacity>
     </View>
   );
 };
