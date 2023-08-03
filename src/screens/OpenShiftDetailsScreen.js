@@ -26,7 +26,7 @@ const OpenShiftDetailsScreen = ({ navigation, route }) => {
   //getting the shift id
   const { shiftId } = route.params;
   const userInfo = route.params?.userInfo;
-  const { userId } = userInfo;
+  const { userId } = userData.userId;
 
   //getting the details of available shifts
   useEffect(() => {

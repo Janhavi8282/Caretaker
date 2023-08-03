@@ -13,6 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import VideoScreen from "../screens/VideoScreen";
 import NewsScreen from "../screens/NewsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import InvoiceScreen from "../screens/InvoiceScreen";
+import AboutScreen from "../screens/AboutScreen";
 
 const AddButton = ({ opened, toggleOpened }) => {
   const animation = React.useRef(new Animated.Value(0)).current;
@@ -67,7 +69,7 @@ const AddButton = ({ opened, toggleOpened }) => {
             />
           </Animated.View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("NewsScreen")}>
+        <TouchableOpacity onPress={() => navigation.navigate("InvoiceScreen")}>
           <Animated.View
             style={[
               styles.item,
@@ -91,7 +93,7 @@ const AddButton = ({ opened, toggleOpened }) => {
             />
           </Animated.View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("ProfileScreen")}>
+        <TouchableOpacity onPress={() => navigation.navigate("AboutScreen")}>
           <Animated.View
             style={[
               styles.item,

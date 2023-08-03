@@ -19,8 +19,8 @@ import NewsDetailScreen from "../screens/NewsDetailScreen";
 import { TabContextProvider } from "../context/TabContext";
 import TimeSheetScreen from "../screens/TimeSheetScreen";
 import VideoScreen from "../screens/VideoScreen";
-import EditAvailabilityScreen from "../screens/EditAvailabilityScreen";
-import EditProfilescreen from "../screens/EditProfilescreen";
+import InvoiceScreen from "../screens/InvoiceScreen";
+import AboutScreen from "../screens/AboutScreen";
 import { COLORS } from "../theme/theme";
 
 const RootStack = createNativeStackNavigator();
@@ -73,15 +73,6 @@ const RootNavigator = () => {
             }}
           />
           <RootStack.Screen
-            name="EditProfilescreen"
-            component={EditProfilescreen}
-            options={{
-              headerShown: true,
-              title: "Profile",
-              headerTitleAlign: "center",
-            }}
-          />
-          <RootStack.Screen
             name="ShiftScreen"
             component={ShiftScreen}
             options={{ headerShown: true }}
@@ -115,26 +106,7 @@ const RootNavigator = () => {
           <RootStack.Screen
             name="AvailabilityScreen"
             component={AvailabilityScreen}
-            options={{
-              title: "Availability",
-              headerShown: true,
-              headerStyle: {
-                backgroundColor: COLORS.teal,
-              },
-              headerTintColor: COLORS.white,
-            }}
-          />
-          <RootStack.Screen
-            name="EditAvailabilityScreen"
-            component={EditAvailabilityScreen}
-            options={{
-              title: "Edit Availability",
-              headerShown: true,
-              headerStyle: {
-                backgroundColor: COLORS.teal,
-              },
-              headerTintColor: COLORS.white,
-            }}
+            options={{ headerShown: true }}
           />
           <RootStack.Screen
             name="NewsScreen"
@@ -176,7 +148,31 @@ const RootNavigator = () => {
             name="TimeSheetScreen"
             component={TimeSheetScreen}
             options={{
-              title: "Time Screen",
+              title: "Time Sheet",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.teal,
+              },
+              headerTintColor: COLORS.white,
+            }}
+          />
+          <RootStack.Screen
+            name="InvoiceScreen"
+            component={InvoiceScreen}
+            options={{
+              title: "Invoice",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.teal,
+              },
+              headerTintColor: COLORS.white,
+            }}
+          />
+          <RootStack.Screen
+            name="AboutScreen"
+            component={AboutScreen}
+            options={{
+              title: "About Us",
               headerShown: true,
               headerStyle: {
                 backgroundColor: COLORS.teal,

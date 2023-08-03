@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   useWindowDimensions,
+  TouchableOpacity,
   Text,
 } from "react-native";
 import Logo from "../../../assets/loginImage.jpg";
@@ -13,6 +14,7 @@ import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/core";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { COLORS } from "../../theme/theme";
 
 const SignInScreen = () => {
   const [email, setEmail] = useState(null);
@@ -23,7 +25,7 @@ const SignInScreen = () => {
   //to check whether the user is valid and if is valid can be logged in then redirect to home screen
   const navigation = useNavigation();
 
-  const { height } = useWindowDimensions(); //use the window dimensions for height so it will not affect when screen size changes
+  const { height } = useWindowDimensions();
 
   //sign in button pressed
   const onSignInPressed = () => {
@@ -68,59 +70,79 @@ const SignInScreen = () => {
   };
 
   return (
-    <View style={styles.root}>
-      {/* inserting image in the screen */}
-      <Image
-        source={Logo}
-        style={[styles.logo, { height: height * 0.3 }, { marginTop: 80 }]} //30% of the height of the window
-        resizeMode="contain"
-      />
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.title}>WELCOME</Text>
+        <CustomInput
+          placeholder="Username"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          setValue={setEmail}
+        />
 
-      {/* inserting custominput for the textbox in the screen */}
-      <CustomInput
-        placeholder="Username"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-        setValue={setEmail}
-      />
+        <CustomInput
+          placeholder="Password"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          setValue={setPassword}
+          secureTextEntry={true}
+        />
 
-      <CustomInput
-        placeholder="Password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        setValue={setPassword}
-        secureTextEntry={true}
-      />
-
-      {error && (
-        <Text style={styles.errorText}>
-          Invalid credentials.Please try again.
-        </Text>
-      )}
-      <CustomButton text="Sign In" onPress={onSignInPressed} />
-
-      <CustomButton
-        text="Forgot Password?"
-        onPress={onForgotPasswordPressed}
-        type="TERTIARY"
-      />
+        {error && (
+          <Text style={styles.errorText}>
+            Invalid credentials! Please try again...
+          </Text>
+        )}
+        <CustomButton text="LOGIN" onPress={onSignInPressed} />
+        <TouchableOpacity
+          style={styles.forgotPasswordButton}
+          onPress={onForgotPasswordPressed}
+        >
+          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+        </TouchableOpacity>
+        {/* <CustomButton
+          text="Forgot Password?"
+          onPress={onForgotPasswordPressed}
+          type="TERTIARY"
+        /> */}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  root: {
+  container: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    padding: 30,
+    backgroundColor: COLORS.teal,
   },
-  logo: {
-    width: "50%",
-    maxWidth: 300,
-    maxHeight: 200,
+  card: {
+    backgroundColor: COLORS.white,
+    borderRadius: 10,
+    padding: 20,
+    width: "80%",
+    maxWidth: 400,
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#333",
   },
   errorText: {
     color: "red",
     marginBottom: 10,
+  },
+  forgotPasswordButton: {
+    alignSelf: "flex-end",
+    margin: 10,
+    marginTop: 20,
+  },
+  forgotPasswordText: {
+    color: COLORS.primary,
+    fontSize: 16,
   },
 });
 
