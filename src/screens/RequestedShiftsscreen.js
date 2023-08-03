@@ -1,16 +1,17 @@
-import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import { useSelector } from "react-redux";
+import { useRoute } from "@react-navigation/native";
 
 const RequestedShiftsscreen = ({ navigation }) => {
   const route = useRoute();
   const [requestedShifts, setRequestedShifts] = useState([]);
   const [shiftNames, setShiftNames] = useState({});
-  const userInfo = route.params?.userInfo;
 
   const userData = useSelector((state) => state.userData);
   const userId = userData?.userId;
+
+  //const requestedShiftIds = requestedShifts.map((shift) => shift.shiftId);
 
   useEffect(() => {
     //API call to fetch data

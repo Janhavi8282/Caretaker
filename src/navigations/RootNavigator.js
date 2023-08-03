@@ -19,6 +19,8 @@ import NewsDetailScreen from "../screens/NewsDetailScreen";
 import { TabContextProvider } from "../context/TabContext";
 import TimeSheetScreen from "../screens/TimeSheetScreen";
 import VideoScreen from "../screens/VideoScreen";
+import EditAvailabilityScreen from "../screens/EditAvailabilityScreen";
+import EditProfilescreen from "../screens/EditProfilescreen";
 import { COLORS } from "../theme/theme";
 
 const RootStack = createNativeStackNavigator();
@@ -71,6 +73,15 @@ const RootNavigator = () => {
             }}
           />
           <RootStack.Screen
+            name="EditProfilescreen"
+            component={EditProfilescreen}
+            options={{
+              headerShown: true,
+              title: "Profile",
+              headerTitleAlign: "center",
+            }}
+          />
+          <RootStack.Screen
             name="ShiftScreen"
             component={ShiftScreen}
             options={{ headerShown: true }}
@@ -104,7 +115,26 @@ const RootNavigator = () => {
           <RootStack.Screen
             name="AvailabilityScreen"
             component={AvailabilityScreen}
-            options={{ headerShown: true }}
+            options={{
+              title: "Availability",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.teal,
+              },
+              headerTintColor: COLORS.white,
+            }}
+          />
+          <RootStack.Screen
+            name="EditAvailabilityScreen"
+            component={EditAvailabilityScreen}
+            options={{
+              title: "Edit Availability",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.teal,
+              },
+              headerTintColor: COLORS.white,
+            }}
           />
           <RootStack.Screen
             name="NewsScreen"
