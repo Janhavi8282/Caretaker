@@ -18,12 +18,12 @@ const EditAvailabilityScreen = ({ date, fromTime, toTime, onSave }) => {
 
   const handleSave = () => {
     const editedAvailability = {
+      userId: userId,
       date: editedDate,
       fromTime: editedFromTime,
       toTime: editedToTime,
-      userId: userId,
     };
-    console.log(date, fromTime, toTime, userId);
+    console.log(userId, date, fromTime, toTime);
     //perform any validation before saving data
     onSave(editedAvailability);
   };

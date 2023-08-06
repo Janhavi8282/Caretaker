@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import { Divider } from "react-native-paper";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -25,6 +26,14 @@ const OpenShiftsScreen = ({ navigation, route }) => {
   const userId = userData?.userId;
   //Get the requested shifts from the Requestedscreen component
   const { requestedShifts } = route.params;
+  const [refresh, setRefresh] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefresh(true);
+    setTimeout(() => {
+      setRefresh(false);
+    }, 1000);
+  });
 
   useEffect(() => {
     //Fetch available shifts
@@ -65,7 +74,11 @@ const OpenShiftsScreen = ({ navigation, route }) => {
     );
 
     return (
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+        }
+      >
         {availableShifts.map((shift, index) => {
           //for getting the month from date
           const shiftDate = new Date(shift.date);

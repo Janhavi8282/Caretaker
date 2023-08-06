@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 import {
   GestureHandlerRootView,
+  ScrollView,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
 const ProfileScreen = ({ navigation }) => {
-  const route = useRoute();
-  const userInfo = route.params?.userInfo;
   const userData = useSelector((state) => state.userData);
   const userId = userData?.userId;
 
@@ -35,12 +35,12 @@ const ProfileScreen = ({ navigation }) => {
       <View style={styles.infoContainer}>
         <View style={styles.info}>
           <Text style={styles.heading}>Email:</Text>
-          <View style={styles.textView}>
+          <View style={styles.info}>
             <Text style={styles.text}>{userData?.email}</Text>
           </View>
 
           <Text style={styles.heading}>Phone: </Text>
-          <View style={styles.textView}>
+          <View style={styles.info}>
             <Text style={styles.text}>{userData?.mobileNumber}</Text>
           </View>
 
