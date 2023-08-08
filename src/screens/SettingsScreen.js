@@ -3,10 +3,34 @@ import { View, Text, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import IconFontAwesome from "react-native-vector-icons/FontAwesome5";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../components/store/actions";
 import { COLORS } from "../theme/theme";
 import TabContainer from "../components/TabContainer";
+import { useSelector } from "react-redux";
+import { useRoute } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SettingsScreen = ({ navigation }) => {
+  const route = useRoute();
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.userData);
+  const userId = userData?.userId;
+
+  const handleLogout = async () => {
+    //Dispatch the logout action to clear user data
+    dispatch(logoutUser());
+    //Clear user data in AsyncStorage
+    try {
+      await AsyncStorage.removeItem("userInfo");
+    } catch (e) {
+      console.log("Error  clearing Asyncstorage");
+    }
+    //setIsLoggedIn(false);
+    //Navigate to login screen
+    navigation.navigate("SignInScreen", { screen: "SignInScreen" });
+  };
+
   return (
     <TabContainer>
       <View style={styles.container}>
@@ -24,6 +48,19 @@ const SettingsScreen = ({ navigation }) => {
             style={styles.button}
           >
             <Text style={styles.text}>Availability</Text>
+            <IconFontAwesome name="greater-than" style={styles.icon} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("NotificationScreen")}
+            style={styles.button}
+          >
+            <Text style={styles.text}>Notification</Text>
+            <IconFontAwesome name="greater-than" style={styles.icon} />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={handleLogout} style={styles.button}>
+            <Text style={styles.text}>Logout</Text>
             <IconFontAwesome name="greater-than" style={styles.icon} />
           </TouchableOpacity>
         </GestureHandlerRootView>

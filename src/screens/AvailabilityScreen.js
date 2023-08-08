@@ -1,18 +1,42 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../components/CustomButton/CustomButton";
 import { useSelector } from "react-redux";
-import EditAvailabilityScreen from "./EditAvailabilityScreen";
 
-const AvailabilityScreen = ({ navigation }) => {
+const AvailabilityScreen = ({ navigation, route }) => {
   const [availability, setAvailability] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
   const userData = useSelector((state) => state.userData);
   const userId = userData?.userId;
-
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     fetchAvailability();
   }, []);
+
+  //update the data with new availability
+  // useEffect(() => {
+  //   if (route.params?.updatedAvailability) {
+  //     setAvailability((prevAvailability) => [
+  //       ...prevAvailability,
+  //       route.params.updatedAvailability,
+  //     ]);
+  //   }
+  // }, [route.params?.updatedAvailability]);
+
+  const onRefresh = () => {
+    setRefresh(true);
+    fetchAvailability();
+    setTimeout(() => {
+      setRefresh(false);
+    }, 1000);
+  };
 
   //fetch availability from API
   const fetchAvailability = async () => {
@@ -20,6 +44,7 @@ const AvailabilityScreen = ({ navigation }) => {
       const response = await fetch(
         `https://lifeshaderapi.azurewebsites.net/api/UserService/GetUserAvailabilityByID?id=${userId}`
       );
+      //console.log("Reponse", JSON.stringify(response));
       const data = await response.json();
       setAvailability(data);
     } catch (error) {
@@ -27,44 +52,17 @@ const AvailabilityScreen = ({ navigation }) => {
     }
   };
 
-  const handleSaveAvailability = async (editedAvailability) => {
-    try {
-      const response = await fetch(
-        `https://lifeshaderapi.azurewebsites.net/api/UserService/UpdateAvailibility`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editedAvailability),
-        }
-      );
-      if (response.ok) {
-        setAvailability([editedAvailability]);
-        //Data updated successfully
-        setIsEditing(false);
-        console.log("Data updated");
-      } else {
-        const errorResponse = await response.json();
-        console.error("Failed to update data", errorResponse);
-      }
-    } catch (error) {
-      console.error("Error updating availability data:", error);
-    }
+  const handleEditAvailability = (availability) => {
+    navigation.navigate("EditAvailabilityScreen", { availability });
   };
 
-  if (isEditing) {
-    return (
-      <EditAvailabilityScreen
-        date={availability[0].date}
-        fromTime={availability[0].fromTime}
-        toTime={availability[0].toTime}
-        onSave={handleSaveAvailability}
-      />
-    );
-  }
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+      }
+    >
       {availability.map((item) => {
         //split date and day seperately
         const date = new Date(item.date);
@@ -84,14 +82,13 @@ const AvailabilityScreen = ({ navigation }) => {
             <Text style={styles.text}>
               To: {new Date(item.toTime).toLocaleTimeString()}
             </Text>
+            <CustomButton
+              text="Edit Availability"
+              onPress={() => handleEditAvailability(item)}
+            />
           </View>
         );
       })}
-
-      <CustomButton
-        text="Edit Availability"
-        onPress={() => setIsEditing(true)}
-      />
     </ScrollView>
   );
 };
