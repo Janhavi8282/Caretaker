@@ -1,48 +1,138 @@
-import React from "react";
-import { Video } from "expo-av";
-
-import { StyleSheet, View, SafeAreaView } from "react-native";
-
-// Video screen
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  ActivityIndicator,
+  FlatList,
+  Image,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+// import vi from "../screens/NewsDetailScreen";
+import { useRoute } from "@react-navigation/native";
+import { COLORS } from "../theme/theme";
 
 const VideoScreen = ({ navigation }) => {
-  const video = React.useRef(null);
-  const [status, setStatus] = React.useState({});
+  const [isLoading, setisLoading] = React.useState(true);
+  const [data, setdata] = useState([]);
+  const [currentIndex, setcurrentIndex] = useState();
+  const [refFlatList, setrefFlatList] = useState();
+  const [id, setId] = useState("");
+
+  useEffect(() => {
+    getListPhotoes();
+    return () => {};
+  }, []);
+
+  getListPhotoes = async () => {
+    const apiURL =
+      "https://jsonplaceholder.typicode.com/photos?_limit=20&_page=1";
+    await fetch(apiURL)
+      .then((res) => res.json())
+      .then((resJson) => {
+        setdata(resJson);
+      })
+      .catch((error) => {
+        console.log("Error: ".error);
+      })
+      .finally(() => setisLoading(false));
+  };
+
+  onClickItem = (item, index) => {
+    setcurrentIndex(index);
+    const newArrData = data.map((e, index) => {
+      if (item.id == e.id) {
+        return {
+          ...e,
+          selected: true,
+        };
+      }
+      return {
+        ...e,
+        selected: false,
+      };
+    });
+    setdata(newArrData);
+  };
+
+  renderItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        // onPress={() => onClickItem(item, index)}
+        onPress={() =>
+          navigation.navigate("VideoPlayer", {
+            videoHeading: `${item.videoHeading}`,
+          })
+        }
+        style={[
+          styles.item,
+          {
+            marginTop: 11,
+            height: 150,
+            backgroundColor: item.selected ? "#f0fff0" : "white",
+          },
+        ]}
+      >
+        <View style={{ height: 100, flexDirection: "row" }}>
+          <Image
+            style={styles.image}
+            source={{ uri: item.thumbnailUrl }}
+          ></Image>
+          <Text style={[styles.title]}>{item.title}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  onScrollToItemSelected = () => {
+    // refFlatList.scroll({animated: true, index:currentIndex});
+  };
+
+  getItemLayout = (data, index) => {
+    return { length: 161, offset: 161 * index, index };
+  };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, padding: 16 }}>
-        <Video
-          ref={video}
-          style={styles.video}
-          source={{
-            uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-          }}
-          useNativeControls
-          resizeMode="contain"
-          isLooping
-          onPlaybackStatusUpdate={setStatus}
+    <SafeAreaView style={styles.container}>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => `key- ${item.id}`}
+          getItemLayout={getItemLayout}
+          ref={(ref) => setrefFlatList(ref)}
         />
-      </View>
+      )}
+      <TouchableOpacity onPress={onScrollToItemSelected}></TouchableOpacity>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  backgroundVideo: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
+  item: {
+    padding: 8,
+    borderRadius: 10,
+    justifyContent: "center",
+    paddingLeft: 16,
+    textAlign: "center",
   },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    padding: 8,
+    backgroundColor: COLORS.background,
   },
-  video: {
+  image: {
+    width: 100,
+    height: 100,
+  },
+  title: {
     flex: 1,
-    alignSelf: "stretch",
+    fontSize: 18,
+    marginLeft: 10,
+    padding: 10,
   },
 });
 export default VideoScreen;

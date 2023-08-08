@@ -6,12 +6,14 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { COLORS } from "../theme/theme";
 import NewsDetailScreen from "../screens/NewsDetailScreen";
 import { useSelector } from "react-redux";
+import TabContainer from "../components/TabContainer";
 
 const HomeScreen = ({ navigation }) => {
   const [data, setdata] = useState([]);
@@ -84,7 +86,7 @@ const HomeScreen = ({ navigation }) => {
       );
       const shiftIds = await response.json();
 
-      const shiftDetailsPromises = shiftIds.map((shiftId) => {
+      const shiftDetailsPromises = await shiftIds.map((shiftId) => {
         console.log("shiftID: ", shiftId.shiftId);
         return fetch(
           `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID?id=${shiftId.shiftId}`
@@ -201,69 +203,79 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Week Shifts</Text>
-      <View style={styles.datecontainer}>
-        {formattedDates.map((date, index) => {
-          const isDateInSecondList = (date) => shiftDate.includes(date);
-          return (
-            <View style={styles.datebox}>
-              <Text
-                key={index}
-                style={
-                  isDateInSecondList(date) ? styles.dateText1 : styles.dateText
-                }
-              >
-                {moment(date).format("MMM")}
-                {"\n"}
-                {moment(date).format("DD")}
-              </Text>
-            </View>
-          );
-        })}
-      </View>
-      <Text style={styles.text}>Latest News</Text>
-      <View style={styles.newscontainer}>
-        {isLoading ? (
-          <ActivityIndicator />
-        ) : (
-          // <FlatList
-          //   data={data}
-          //   renderItem={renderItem}
-          //   // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
-          //   keyExtractor={(item1) => item1.newsId.toString()}
-          //   getItemLayout={getItemLayout}
-          //   ref={(ref) => setrefFlatList(ref)}
-          // />
-          <FlatList
-            data={data}
-            renderItem={renderItem}
-            // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
-            keyExtractor={keyExtractor}
-            getItemLayout={getItemLayout}
-            ref={(ref) => setrefFlatList(ref)}
-          />
-        )}
-      </View>
-    </View>
+    <TabContainer>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+          <Text style={styles.text}>Week Shifts</Text>
+          <View style={styles.datecontainer}>
+            {formattedDates.map((date, index) => {
+              const isDateInSecondList = (date) => shiftDate.includes(date);
+              return (
+                <View style={styles.datebox}>
+                  <Text
+                    key={index}
+                    style={
+                      isDateInSecondList(date)
+                        ? styles.dateText1
+                        : styles.dateText
+                    }
+                  >
+                    {moment(date).format("ddd")}
+                    {"\n"}
+                    {moment(date).format("DD")}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+          <Text style={styles.text}>Latest News</Text>
+          <View style={styles.newscontainer}>
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              // <FlatList
+              //   data={data}
+              //   renderItem={renderItem}
+              //   // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
+              //   keyExtractor={(item1) => item1.newsId.toString()}
+              //   getItemLayout={getItemLayout}
+              //   ref={(ref) => setrefFlatList(ref)}
+              // />
+              <FlatList
+                data={data}
+                renderItem={renderItem}
+                // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
+                keyExtractor={keyExtractor}
+                getItemLayout={getItemLayout}
+                ref={(ref) => setrefFlatList(ref)}
+              />
+            )}
+          </View>
+        </View>
+      </SafeAreaView>
+    </TabContainer>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 3,
+    backgroundColor: COLORS.background,
   },
   text: {
     fontSize: 20,
     fontWeight: "bold",
     marginLeft: 5,
     marginTop: 5,
+    color: COLORS.gray,
   },
   datecontainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     margin: 3,
+    padding: 3,
   },
   datebox: {
     textAlign: "center",
@@ -273,7 +285,7 @@ const styles = StyleSheet.create({
     padding: 3,
     fontSize: 20,
     color: COLORS.white,
-    backgroundColor: COLORS.teal,
+    backgroundColor: COLORS.blue,
     fontWeight: "bold",
     textAlign: "center",
     borderRadius: 50,
@@ -281,11 +293,11 @@ const styles = StyleSheet.create({
   dateText: {
     padding: 3,
     fontSize: 20,
-    color: COLORS.white,
-    backgroundColor: COLORS.yellow,
+    color: COLORS.blue,
+    backgroundColor: COLORS.white,
     fontWeight: "bold",
     textAlign: "center",
-    borderRadius: 50,
+    // borderRadius: 50,
   },
   item: {
     borderWidth: 0.5,

@@ -12,20 +12,20 @@ const SettingsScreen = ({ navigation }) => {
       <View style={styles.container}>
         <GestureHandlerRootView>
           <TouchableOpacity
-            onPress={() => navigation.navigate("ProfileScreen")}
+            onPress={() => navigation.navigate("AboutScreen")}
             style={styles.button}
           >
-            <Text style={styles.text}>Profile</Text>
-            <IconFontAwesome name="greater-than" style={styles.icon} />
+            <IconFontAwesome name="user-circle" style={styles.icon} />
+            <Text style={styles.text}>About</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => navigation.navigate("AvailabilityScreen")}
             style={styles.button}
           >
-            <Text style={styles.text}>Availability</Text>
             <IconFontAwesome name="greater-than" style={styles.icon} />
-          </TouchableOpacity>
+            <Text style={styles.text}>Availability</Text>
+          </TouchableOpacity> */}
         </GestureHandlerRootView>
       </View>
     </TabContainer>
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f2f6f7",
+    backgroundColor: COLORS.background,
   },
   button: {
     padding: 25,
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     borderBottomEndRadius: 10,
     borderBottomStartRadius: 10,
     flexDirection: "row",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -58,10 +58,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "black",
+    marginLeft: 10,
   },
   icon: {
     fontSize: 20,
-    color: "#fcdb67",
+    color: COLORS.dark,
   },
 });
 

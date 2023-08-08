@@ -115,10 +115,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: COLORS.teal,
+    backgroundColor: COLORS.background,
   },
   card: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.blue,
     borderRadius: 10,
     padding: 20,
     width: "80%",
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    color: "#333",
+    color: COLORS.white,
   },
   errorText: {
     color: "red",
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   forgotPasswordText: {
-    color: COLORS.primary,
+    color: COLORS.white,
     fontSize: 16,
   },
 });

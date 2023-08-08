@@ -17,7 +17,7 @@ import { setUserData } from "../components/store/actions";
 import { useDispatch } from "react-redux";
 
 const getIconColor = (focused) => ({
-  tintColor: focused ? COLORS.teal : COLORS.dark,
+  tintColor: focused ? COLORS.blue : COLORS.dark,
 });
 
 const TabNavigator = ({ navigation }) => {
@@ -51,9 +51,9 @@ const TabNavigator = ({ navigation }) => {
           },
           headerShown: true,
           headerStyle: {
-            backgroundColor: COLORS.teal,
+            backgroundColor: COLORS.background,
           },
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.blue,
           tabBarIcon: ({ focused }) => (
             <View style={styles.tabIconContainer}>
               <Image
@@ -69,21 +69,21 @@ const TabNavigator = ({ navigation }) => {
         }}
       />
       <Tab.Screen
-        name="Clock"
-        component={ClockScreen}
+        name="Shift"
+        component={ShiftScreen}
         options={{
           tabBarItemStyle: {
             height: 0,
           },
           headerShown: true,
           headerStyle: {
-            backgroundColor: COLORS.teal, // Change this color to your desired color
+            backgroundColor: COLORS.background, // Change this color to your desired color
           },
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.blue,
           tabBarIcon: ({ focused }) => (
             <View style={styles.tabIconContainer}>
               <Image
-                source={require("../../assets/clock.png")}
+                source={require("../../assets/shift.png")}
                 resizeMode="contain"
                 style={[styles.tabIcon, getIconColor(focused)]}
               />
@@ -107,21 +107,22 @@ const TabNavigator = ({ navigation }) => {
         }}
       />
       <Tab.Screen
-        name="Shift"
-        component={ShiftScreen}
+        name="ProfileScreen"
+        component={ProfileScreen}
         options={{
-          headerShown: true,
-          headerStyle: {
-            backgroundColor: COLORS.teal, // Change this color to your desired color
-          },
-          headerTintColor: COLORS.white,
+          title: "Profile",
           tabBarItemStyle: {
             height: 0,
           },
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: COLORS.background, // Change this color to your desired color
+          },
+          headerTintColor: COLORS.blue,
           tabBarIcon: ({ focused }) => (
             <View style={styles.tabIconContainer}>
               <Image
-                source={require("../../assets/shift.png")}
+                source={require("../../assets/profile.png")}
                 resizeMode="contain"
                 style={[styles.tabIcon, getIconColor(focused)]}
               />
@@ -141,9 +142,9 @@ const TabNavigator = ({ navigation }) => {
           },
           headerShown: true,
           headerStyle: {
-            backgroundColor: COLORS.teal, // Change this color to your desired color
+            backgroundColor: COLORS.background, // Change this color to your desired color
           },
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.blue,
           tabBarIcon: ({ focused }) => (
             <View style={styles.tabIconContainer}>
               <Image
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: COLORS.white,
     borderTopColor: "transparent",
-    shadowColor: COLORS.teal,
+    shadowColor: COLORS.blue,
     shadowOffset: {
       height: 6,
       width: 0,

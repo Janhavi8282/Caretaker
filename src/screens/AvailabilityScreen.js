@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import CustomButton from "../components/CustomButton/CustomButton";
 import { useSelector } from "react-redux";
 import EditAvailabilityScreen from "./EditAvailabilityScreen";
+import { COLORS } from "../theme/theme";
 
 const AvailabilityScreen = ({ navigation }) => {
   const [availability, setAvailability] = useState([]);
@@ -101,6 +102,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     margin: 5,
+    backgroundColor: COLORS.background,
   },
   row: {
     flexDirection: "row",
