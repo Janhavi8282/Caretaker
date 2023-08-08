@@ -8,25 +8,27 @@ import {
 import React, { useEffect, useState } from "react";
 import CustomButton from "../components/CustomButton/CustomButton";
 import { useSelector } from "react-redux";
-import EditAvailabilityScreen from "./EditAvailabilityScreen";
 
-const AvailabilityScreen = ({ navigation }) => {
+const AvailabilityScreen = ({ navigation, route }) => {
   const [availability, setAvailability] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const userData = useSelector((state) => state.userData);
   const userId = userData?.userId;
   const [refresh, setRefresh] = useState(false);
-
-  const handleEditAvailability = (item) => {
-    console.log("Item", item);
-    setSelectedItem(item);
-    setIsEditing(true);
-  };
-
   useEffect(() => {
     fetchAvailability();
   }, []);
+
+  //update the data with new availability
+  // useEffect(() => {
+  //   if (route.params?.updatedAvailability) {
+  //     setAvailability((prevAvailability) => [
+  //       ...prevAvailability,
+  //       route.params.updatedAvailability,
+  //     ]);
+  //   }
+  // }, [route.params?.updatedAvailability]);
 
   const onRefresh = () => {
     setRefresh(true);
@@ -42,6 +44,7 @@ const AvailabilityScreen = ({ navigation }) => {
       const response = await fetch(
         `https://lifeshaderapi.azurewebsites.net/api/UserService/GetUserAvailabilityByID?id=${userId}`
       );
+      //console.log("Reponse", JSON.stringify(response));
       const data = await response.json();
       setAvailability(data);
     } catch (error) {
@@ -49,57 +52,10 @@ const AvailabilityScreen = ({ navigation }) => {
     }
   };
 
-  const handleSaveAvailability = async (editedAvailability) => {
-    console.log("Availability", editedAvailability);
-    // const editedAvailabilityUTC = {
-    //   date: new Date(editedAvailability.date).toISOString(),
-    //   fromTime: new Date(editedAvailability.fromTime).toISOString(),
-    //   toTime: new Date(editedAvailability.toTime).toISOString(),
-    // };
-    try {
-      const { date, fromTime, toTime } = editedAvailability;
-      console.log("Values", userId, date, fromTime, toTime);
-      const response = await fetch(
-        `https://lifeshaderapi.azurewebsites.net/api/UserService/UpdateAvailibility?id=${userId}&date=${date}&fromTime=${fromTime}&toTime=${toTime}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editedAvailability),
-        }
-      );
-      if (response.ok) {
-        setAvailability([editedAvailability]);
-        // const data = await response.json();
-        // setAvailability(data);
-        //Data updated successfully
-        setIsEditing(false);
-        console.log("Data updated");
-      } else {
-        const textResponse = await response.text();
-        console.error(
-          "Failed to update data- Validation error ",
-          response.status,
-          textResponse
-        );
-      }
-    } catch (error) {
-      console.error("Error updating availability data:", error);
-    }
+  const handleEditAvailability = (availability) => {
+    navigation.navigate("EditAvailabilityScreen", { availability });
   };
 
-  if (isEditing && selectedItem) {
-    console.log("Inside editing");
-    return (
-      <EditAvailabilityScreen
-        date={selectedItem.date}
-        fromTime={selectedItem.fromTime}
-        toTime={selectedItem.toTime}
-        onSave={handleSaveAvailability}
-      />
-    );
-  }
   return (
     <ScrollView
       contentContainerStyle={styles.container}

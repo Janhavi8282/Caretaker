@@ -1,31 +1,71 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
 import CustomButton from "../components/CustomButton/CustomButton";
 import { useSelector } from "react-redux";
 
-const EditAvailabilityScreen = ({ date, fromTime, toTime, onSave }) => {
+const EditAvailabilityScreen = ({ route, navigation }) => {
+  const { availability } = route.params;
   const userData = useSelector((state) => state.userData);
   const userId = userData?.userId;
-  const [editedDate, setEditedDate] = useState(new Date(date).toISOString());
-  const [editedFromTime, setEditedFromTime] = useState(
-    new Date(fromTime).toISOString()
-  );
-  const [editedToTime, setEditedToTime] = useState(
-    new Date(toTime).toISOString()
-  );
-  //set initial values for editedAvailability when availability is not available
-  //console.log("edited", editedAvailability);
+  const [date, setDate] = useState(availability.date);
+  const [fromTime, setFromTime] = useState(availability.fromTime);
+  const [toTime, setToTime] = useState(availability.toTime);
+  const [updateAvailability, setUpdatedAvailability] = useState("");
+  const [availabilityId, setAvailabilityId] = useState(null);
+  const updatedUserAvailability = {
+    userId: userId,
+    date: date,
+    fromTime: fromTime,
+    toTime: toTime,
+  };
+  console.log("Updated availability", updatedUserAvailability);
 
-  const handleSave = () => {
-    const editedAvailability = {
-      userId: userId,
-      date: editedDate,
-      fromTime: editedFromTime,
-      toTime: editedToTime,
-    };
-    console.log(userId, date, fromTime, toTime);
-    //perform any validation before saving data
-    onSave(editedAvailability);
+  const handleUpdateAvailability = async (updatedUserAvailability) => {
+    //console.log("Updated Availability", updatedUserAvailability);
+    //Make API call to update availablity
+    try {
+      const response = await fetch(
+        `https://lifeshaderapi.azurewebsites.net/api/UserService/UpdateAvailibility?id=${userId}&date=${availability.date}&fromTime=${availability.fromTime}&toTime=${availability.toTime}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userId,
+            date: date,
+            fromTime: fromTime,
+            toTime: toTime,
+          }),
+        }
+      );
+      // console.log("Response", json.stringify(response));
+      if (response.ok) {
+        setUpdatedAvailability(updatedUserAvailability);
+        //Data updated successfully
+        showSuccessBox();
+        console.log("Data updated");
+      }
+    } catch (error) {
+      console.error("Error updating data", error);
+    }
+  };
+
+  //success box when shift is requested successfully
+  const showSuccessBox = () => {
+    Alert.alert(
+      "Your availability is updated successfully!!!",
+      "Go back to availability screen",
+      [
+        {
+          text: "OK",
+          onPress: () =>
+            navigation.navigate("AvailabilityScreen", {
+              updateAvailability: updatedUserAvailability,
+            }),
+        },
+      ]
+    );
   };
 
   return (
@@ -34,23 +74,26 @@ const EditAvailabilityScreen = ({ date, fromTime, toTime, onSave }) => {
         <Text style={styles.label}>Date:</Text>
         <TextInput
           style={styles.input}
-          value={editedDate}
-          onChangeText={setEditedDate}
+          value={date}
+          onChangeText={(text) => setDate(text)}
+          setValue={setDate}
         />
         <Text style={styles.label}>From Time:</Text>
         <TextInput
           style={styles.input}
-          value={editedFromTime}
-          onChangeText={setEditedFromTime}
+          value={fromTime}
+          onChangeText={(text) => setFromTime(text)}
+          setValue={setFromTime}
         />
         <Text style={styles.label}>To Time:</Text>
         <TextInput
           style={styles.input}
-          value={editedToTime}
-          onChangeText={setEditedToTime}
+          value={toTime}
+          onChangeText={(text) => setToTime(text)}
+          setValue={setToTime}
         />
       </View>
-      <CustomButton text="Submit" onPress={handleSave} />
+      <CustomButton text="Update" onPress={handleUpdateAvailability} />
     </View>
   );
 };
