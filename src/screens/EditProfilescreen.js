@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button, TextInput } from "react-native";
+import { View, Text, StyleSheet, Button, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
 import CustomButton from "../components/CustomButton/CustomButton";
 import { useSelector, useDispatch } from "react-redux";
@@ -27,55 +27,6 @@ const EditProfilescreen = ({ route, navigation }) => {
     mobileNumber: mobileNumber,
   };
 
-  const handleSaveChanges = () => {
-    //Create the updated user object
-    // const updatedUserDetails = {
-    //   userId: userId,
-    //   firstName,
-    //   lastName,
-    //   email,
-    //   mobileNumber,
-    // };
-
-    //Send the updated user data to API
-    fetch(
-      "https://lifeshaderapi.azurewebsites.net/api/UserService/UpdateUser",
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedUserDetails),
-      }
-    )
-      .then((response) => {
-        //console.log("Response", response.data);
-        setUpdateUser(response.data);
-      })
-
-      // .then((response) => {
-      //   console.log(response);
-      // })
-      // .then((response) => {
-      //   console.log("Response", response.json());
-      //   dispatch(setUserData(response));
-      //   navigation.navigate("ProfileScreen");
-      // })
-      // .then((data) => {
-      //   //Handle the response from API
-      //   console.log("User Updated Successfully", data);
-      //   //Dispatch the action to update the Redux store with the new user data
-      //   dispatch(setUserData(data));
-
-      //   //Perform any necessary actions after successfull update
-      //   navigation.navigate("ProfileScreen");
-      // })
-      .catch((error) => {
-        //console.log("Error updating user", error);
-        setErrorMessage("Values not updated");
-        //Handle the error condition
-      });
-  };
   const handleSaveAvailability = async (updatedUserDetails) => {
     //console.log("USer", updatedUserDetails);
     try {
@@ -100,16 +51,26 @@ const EditProfilescreen = ({ route, navigation }) => {
       if (response.ok) {
         setUpdateUser([updatedUserDetails]);
         //Data updated successfully
-        //setIsEditing(false);
+        showSuccessBox();
         console.log("Data updated");
       }
-      // } else {
-      //   // const errorResponse = await response.json();
-      //   // console.error("Failed to update data", errorResponse);
-      // }
     } catch (error) {
       console.error("Error updating availability data:", error);
     }
+  };
+
+  //success box when shift is requested successfully
+  const showSuccessBox = () => {
+    Alert.alert(
+      "Your profile is updated successfully!!!",
+      "Go back to profile screen",
+      [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("ProfileScreen"),
+        },
+      ]
+    );
   };
 
   return (

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 import {
   GestureHandlerRootView,
+  ScrollView,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
@@ -10,8 +12,6 @@ import { COLORS } from "../theme/theme";
 import TabContainer from "../components/TabContainer";
 
 const ProfileScreen = ({ navigation }) => {
-  const route = useRoute();
-  const userInfo = route.params?.userInfo;
   const userData = useSelector((state) => state.userData);
   const userId = userData?.userId;
 

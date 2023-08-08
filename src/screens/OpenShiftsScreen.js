@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -6,6 +6,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 import moment from "moment";
 import { useRoute } from "@react-navigation/native";
@@ -20,6 +23,16 @@ const OpenShiftsScreen = ({ navigation, route }) => {
   let [response, setResponse] = useState([]);
   const userData = useSelector((state) => state.userData);
   const userId = userData?.userId;
+  //Get the requested shifts from the Requestedscreen component
+  const { requestedShifts } = route.params;
+  const [refresh, setRefresh] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefresh(true);
+    setTimeout(() => {
+      setRefresh(false);
+    }, 1000);
+  });
 
   const [showShiftAlert, setShowShiftAlert] = useState(false);
   const [showRequestAlert, setShowRequestAlert] = useState(false);

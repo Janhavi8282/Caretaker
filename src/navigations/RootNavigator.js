@@ -22,11 +22,18 @@ import InvoiceScreen from "../screens/InvoiceScreen";
 import AboutScreen from "../screens/AboutScreen";
 import MyShiftScreen from "../screens/MyShiftsScreen";
 import VideoPlayer from "../components/VideoPlayer";
+import NotificationScreen from "../screens/NotificationScreen";
+import NotificationDetailsScreen from "../screens/NotificationDetailsScreen";
+import SettingsScreen from "../screens/SettingsScreen";
+import EditProfilescreen from "../screens/EditProfilescreen";
+import EditAvailabilityScreen from "../screens/EditAvailabilityScreen";
 import { COLORS } from "../theme/theme";
+import { useDispatch } from "react-redux";
 
 const RootStack = createNativeStackNavigator();
 
 const RootNavigator = () => {
+  const dispatch = useDispatch();
   //state to track the user's authentication status
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -49,10 +56,10 @@ const RootNavigator = () => {
     <TabContextProvider>
       <NavigationContainer>
         <RootStack.Navigator
-          initialRouteName={isLoggedIn ? "HomeScreen" : "SignIn"}
+          initialRouteName={isLoggedIn ? "MainTabs" : "SignIn"}
           screenOptions={{ headerShown: false }}
         >
-          <RootStack.Screen name="SignIn" component={SignInScreen} />
+          <RootStack.Screen name="SignInScreen" component={SignInScreen} />
           <RootStack.Screen
             name="HomeScreen"
             component={HomeScreen}
@@ -69,6 +76,15 @@ const RootNavigator = () => {
                 backgroundColor: COLORS.background,
               },
               headerTintColor: COLORS.blue,
+            }}
+          />
+          <RootStack.Screen
+            name="EditProfilescreen"
+            component={EditProfilescreen}
+            options={{
+              headerShown: true,
+              title: "Edit Profile",
+              headerTitleAlign: "center",
             }}
           />
           <RootStack.Screen
@@ -125,6 +141,7 @@ const RootNavigator = () => {
           />
           <RootStack.Screen
             name="AvailabilityScreen"
+            title="Availability"
             component={AvailabilityScreen}
             options={{
               headerShown: true,
@@ -133,6 +150,12 @@ const RootNavigator = () => {
               },
               headerTintColor: COLORS.blue,
             }}
+          />
+          <RootStack.Screen
+            name="EditAvailabilityScreen"
+            title="Edit Availability"
+            component={EditAvailabilityScreen}
+            options={{ headerShown: true }}
           />
           <RootStack.Screen
             name="NewsScreen"
@@ -159,10 +182,46 @@ const RootNavigator = () => {
             }}
           />
           <RootStack.Screen
+            name="SettingsScreen"
+            component={SettingsScreen}
+            options={{
+              title: "Settings",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.teal,
+              },
+              headerTintColor: COLORS.white,
+            }}
+          />
+          <RootStack.Screen
             name="VideoScreen"
             component={VideoScreen}
             options={{
               title: "Video Screen",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
+            }}
+          />
+          <RootStack.Screen
+            name="NotificationScreen"
+            component={NotificationScreen}
+            options={{
+              title: "Notifications",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
+            }}
+          />
+          <RootStack.Screen
+            name="NotificationDetailsScreen"
+            component={NotificationDetailsScreen}
+            options={{
+              title: "Notification Details",
               headerShown: true,
               headerStyle: {
                 backgroundColor: COLORS.background,

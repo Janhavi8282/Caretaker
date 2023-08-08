@@ -17,8 +17,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../../theme/theme";
 
 const SignInScreen = () => {
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [userInfo, setUserInfo] = useState({});
 
