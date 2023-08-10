@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 
 import { StyleSheet, View, SafeAreaView, Dimensions } from "react-native";
 import { COLORS } from "../theme/theme";
+import { useRoute } from "@react-navigation/native";
 
 // Video screen
 
 const VideoPlayer = ({ navigation }) => {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
+  const route = useRoute();
+  const videoLink = route.params?.videoLink;
 
   const [videoStyle, setVideoStyle] = useState({});
 

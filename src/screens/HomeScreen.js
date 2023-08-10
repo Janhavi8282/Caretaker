@@ -7,13 +7,17 @@ import {
   FlatList,
   Image,
   SafeAreaView,
+  RefreshControl,
+  ScrollView,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import moment from "moment";
+
 import { COLORS } from "../theme/theme";
 import NewsDetailScreen from "../screens/NewsDetailScreen";
 import { useSelector } from "react-redux";
 import TabContainer from "../components/TabContainer";
+import moment from "moment/moment";
 
 const HomeScreen = ({ navigation }) => {
   const [data, setdata] = useState([]);
@@ -24,9 +28,9 @@ const HomeScreen = ({ navigation }) => {
   let [isLoading, setisLoading] = useState(true);
   let [error, setError] = useState();
   let [response, setResponse] = useState();
-
+  const [refresh, setRefresh] = useState(false);
   const userData = useSelector((state) => state.userData);
-  const id = userData?.userId;
+  let id = 0;
 
   const getUpcomingWeekDates = () => {
     const dates = [];
@@ -36,20 +40,28 @@ const HomeScreen = ({ navigation }) => {
     }
     return dates;
   };
+
+  const loadData = () => {
+    id = userData?.userId;
+    console.log("UserID at loaddata", id);
+    getListNews();
+    getShiftDates();
+  };
+
   const upcomingDates = getUpcomingWeekDates();
   const formattedDates = upcomingDates.map((originalDate) =>
     moment(originalDate).format("YYYY-MM-DD")
   );
 
   useEffect(() => {
-    getListNews();
-    getShiftDates();
+    id = userData?.userId;
+    console.log("UserID");
+    console.log(id);
+    loadData();
     return () => {};
   }, []);
 
   const getListNews = async () => {
-    const id = userData?.userId;
-    console.log("userid: ", id);
     const apiURL = `https://lifeshaderapi.azurewebsites.net/api/NewsService/GetUserNewsByUserID?id=${id}`;
     await fetch(apiURL)
       .then((res) => res.json())
@@ -71,7 +83,7 @@ const HomeScreen = ({ navigation }) => {
             setdata(uniqueData);
           })
           .catch((error) => {
-            console.error("Error fetching News details: ", error);
+            console.error("Please refresh screen by scrolling");
           });
       })
       .catch((error) => {
@@ -86,11 +98,14 @@ const HomeScreen = ({ navigation }) => {
       );
       const shiftIds = await response.json();
 
-      const shiftDetailsPromises = await shiftIds.map((shiftId) => {
+      const shiftDetailsPromises = shiftIds.map(async (shiftId) => {
         console.log("shiftID: ", shiftId.shiftId);
-        return fetch(
+        const shiftResponse = await fetch(
           `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID?id=${shiftId.shiftId}`
-        ).then((response) => response.json());
+        );
+        const shiftDetail = await shiftResponse.json();
+
+        return shiftDetail;
       });
 
       const shiftDetails = await Promise.all(shiftDetailsPromises);
@@ -98,16 +113,45 @@ const HomeScreen = ({ navigation }) => {
         (shift) => shift.status === "INPROGRESS"
       );
 
-      // Extract dates from completedShifts and store in shiftDates array
       const shiftDates = completedShifts.map((item) =>
         moment(item.date).format("YYYY-MM-DD")
       );
 
       setShiftDate(shiftDates);
     } catch (error) {
-      console.error("Error fetching shift details: ", error);
+      Alert.alert("Please refresh screen by scrolling");
+      console.error("Please refresh screen by scrolling");
     }
   };
+  // const getShiftDates = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetMyShifts?id=${id}`
+  //     );
+  //     const shiftIds = await response.json();
+
+  //     const shiftDetailsPromises = await shiftIds.map((shiftId) => {
+  //       console.log("shiftID: ", shiftId.shiftId);
+  //       return fetch(
+  //         `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID?id=${shiftId.shiftId}`
+  //       ).then((response) => response.json());
+  //     });
+
+  //     const shiftDetails = await Promise.all(shiftDetailsPromises);
+  //     const completedShifts = shiftDetails.filter(
+  //       (shift) => shift.status === "INPROGRESS"
+  //     );
+
+  //     // Extract dates from completedShifts and store in shiftDates array
+  //     const shiftDates = completedShifts.map((item) =>
+  //       moment(item.date).format("YYYY-MM-DD")
+  //     );
+
+  //     setShiftDate(shiftDates);
+  //   } catch (error) {
+  //     console.error("Error fetching shift details: ", error);
+  //   }
+  // };
 
   // const getShiftDates = async () => {
   //   fetch(
@@ -165,6 +209,7 @@ const HomeScreen = ({ navigation }) => {
   renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
+        key="item"
         onPress={() =>
           navigation.navigate("NewsDetailScreen", {
             newsHeading: `${item.newsHeading}`,
@@ -201,58 +246,71 @@ const HomeScreen = ({ navigation }) => {
   const keyExtractor = (item, index) => {
     return item.newsId.toString() + index.toString();
   };
-
+  const onRefresh = () => {
+    setRefresh(true);
+    loadData();
+    setTimeout(() => {
+      setRefresh(false);
+    }, 1000);
+  };
   return (
     <TabContainer>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.container}>
-          <Text style={styles.text}>Week Shifts</Text>
-          <View style={styles.datecontainer}>
-            {formattedDates.map((date, index) => {
-              const isDateInSecondList = (date) => shiftDate.includes(date);
-              return (
-                <View style={styles.datebox}>
-                  <Text
-                    key={index}
-                    style={
-                      isDateInSecondList(date)
-                        ? styles.dateText1
-                        : styles.dateText
-                    }
-                  >
-                    {moment(date).format("ddd")}
-                    {"\n"}
-                    {moment(date).format("DD")}
-                  </Text>
-                </View>
-              );
-            })}
+      <ScrollView
+        contentContainerStyle={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+        }
+      >
+        <SafeAreaView style={styles.container}>
+          <View style={styles.container}>
+            <Text style={styles.text}>Week Shifts</Text>
+            <View style={styles.datecontainer}>
+              {formattedDates.map((date, index) => {
+                const isDateInSecondList = (date) => shiftDate.includes(date);
+                return (
+                  <View style={styles.datebox}>
+                    <Text
+                      key={index}
+                      style={
+                        isDateInSecondList(date)
+                          ? styles.dateText1
+                          : styles.dateText
+                      }
+                    >
+                      {moment(date).format("ddd")}
+                      {"\n"}
+                      {moment(date).format("DD")}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+            <Text style={styles.text}>Latest News</Text>
+            <View style={styles.newscontainer}>
+              {isLoading ? (
+                <ActivityIndicator />
+              ) : (
+                // <FlatList
+                //   data={data}
+                //   renderItem={renderItem}
+                //   // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
+                //   keyExtractor={(item1) => item1.newsId.toString()}
+                //   getItemLayout={getItemLayout}
+                //   ref={(ref) => setrefFlatList(ref)}
+                // />
+                <FlatList
+                  data={data}
+                  renderItem={renderItem}
+                  // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
+                  keyExtractor={keyExtractor}
+                  getItemLayout={getItemLayout}
+                  ref={(ref) => setrefFlatList(ref)}
+                />
+              )}
+            </View>
           </View>
-          <Text style={styles.text}>Latest News</Text>
-          <View style={styles.newscontainer}>
-            {isLoading ? (
-              <ActivityIndicator />
-            ) : (
-              // <FlatList
-              //   data={data}
-              //   renderItem={renderItem}
-              //   // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
-              //   keyExtractor={(item1) => item1.newsId.toString()}
-              //   getItemLayout={getItemLayout}
-              //   ref={(ref) => setrefFlatList(ref)}
-              // />
-              <FlatList
-                data={data}
-                renderItem={renderItem}
-                // keyExtractor={(item) => `key- ${item.newsId.toString()}`}
-                keyExtractor={keyExtractor}
-                getItemLayout={getItemLayout}
-                ref={(ref) => setrefFlatList(ref)}
-              />
-            )}
-          </View>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </ScrollView>
     </TabContainer>
   );
 };
@@ -288,7 +346,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.blue,
     fontWeight: "bold",
     textAlign: "center",
-    borderRadius: 50,
+    // borderRadius: 50,
   },
   dateText: {
     padding: 3,

@@ -9,6 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import { useRoute } from "@react-navigation/native";
 import moment from "moment";
+import { COLORS } from "../theme/theme";
 
 const TimeSheetScreen = ({ navigation }) => {
   // const { completedShifts } = route.params;
@@ -16,7 +17,7 @@ const TimeSheetScreen = ({ navigation }) => {
   const completedShifts = route.params?.completedShifts;
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.background }}>
       <FlatList
         data={completedShifts}
         renderItem={({ item }) => (
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: COLORS.background,
   },
   itemContainer: {
     flexDirection: "row",

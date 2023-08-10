@@ -43,7 +43,7 @@ const SignInScreen = () => {
         //console.log("Success",response);
         if (Array.isArray(response.data) && response.data.length > 0) {
           let userInfo = response.data[0];
-          setUserInfo(userInfo);
+          //setUserInfo(userInfo);
           AsyncStorage.setItem("userInfo", JSON.stringify(userInfo)).then(
             () => {
               //console.log(userInfo);

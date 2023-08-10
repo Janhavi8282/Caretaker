@@ -126,7 +126,9 @@ const ClockScreen = ({ navigation }) => {
       .then((responseClockInData) => {
         console.log(JSON.stringify(responseClockInData));
       })
-      .done();
+      .catch((error) => {
+        console.error("Error updating clock-in time: ", error);
+      });
   };
   const handleClcokOutConfirmation = async () => {
     setDisplayMessage("You are off Clock");
@@ -159,16 +161,17 @@ const ClockScreen = ({ navigation }) => {
         },
         body: JSON.stringify({
           shiftId: shiftId,
-          clockInTime: new Date().toISOString(),
+          clockOutTime: new Date().toISOString(),
         }),
       }
     )
       .then((response) => response.json())
       .then((responseClockOutData) => {
-        console.log("===========");
         console.log(JSON.stringify(responseClockOutData));
       })
-      .done();
+      .catch((error) => {
+        console.error("Error updating clock-out time: ", error);
+      });
   };
   useEffect(() => {
     const loadStoredData = async () => {
@@ -251,6 +254,7 @@ const ClockScreen = ({ navigation }) => {
         style={{
           flex: 1,
           alignItems: "center",
+          backgroundColor: COLORS.background,
         }}
       >
         <Text style={styles.clockText}>{displayMessage}</Text>
@@ -295,13 +299,13 @@ const styles = StyleSheet.create({
   },
   timerContainer: {
     borderWidth: 4,
-    borderColor: COLORS.teal,
+    borderColor: COLORS.blue,
     width: 250,
     height: 250,
     borderRadius: 250 / 2,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.teal,
+    backgroundColor: COLORS.blue,
   },
   timer: {
     fontSize: 50,
@@ -316,7 +320,7 @@ const styles = StyleSheet.create({
     height: 45,
     padding: 5,
     // borderRadius: 80 / 2,
-    backgroundColor: COLORS.yellow,
+    backgroundColor: COLORS.blue,
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 20,
@@ -324,7 +328,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    color: "#fff",
+    color: COLORS.white,
+    fontWeight: "bold",
   },
   TimeSheetbutton: {
     position: "absolute",

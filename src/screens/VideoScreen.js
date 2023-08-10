@@ -27,11 +27,12 @@ const VideoScreen = ({ navigation }) => {
 
   getListPhotoes = async () => {
     const apiURL =
-      "https://jsonplaceholder.typicode.com/photos?_limit=20&_page=1";
+      "https://lifeshaderapi.azurewebsites.net/api/Traning/GetAllVideos";
     await fetch(apiURL)
       .then((res) => res.json())
       .then((resJson) => {
         setdata(resJson);
+        console.log(resJson);
       })
       .catch((error) => {
         console.log("Error: ".error);
@@ -62,7 +63,7 @@ const VideoScreen = ({ navigation }) => {
         // onPress={() => onClickItem(item, index)}
         onPress={() =>
           navigation.navigate("VideoPlayer", {
-            videoHeading: `${item.videoHeading}`,
+            videoHeading: `${item.videoLink}`,
           })
         }
         style={[
@@ -75,11 +76,8 @@ const VideoScreen = ({ navigation }) => {
         ]}
       >
         <View style={{ height: 100, flexDirection: "row" }}>
-          <Image
-            style={styles.image}
-            source={{ uri: item.thumbnailUrl }}
-          ></Image>
-          <Text style={[styles.title]}>{item.title}</Text>
+          <Image style={styles.image} source={{ uri: item.photoLink }}></Image>
+          <Text style={[styles.title]}>{item.heading}</Text>
         </View>
       </TouchableOpacity>
     );

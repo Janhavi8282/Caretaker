@@ -84,7 +84,11 @@ const RootNavigator = () => {
             options={{
               headerShown: true,
               title: "Edit Profile",
-              headerTitleAlign: "center",
+              // headerTitleAlign: "center",
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
             }}
           />
           <RootStack.Screen
@@ -144,6 +148,7 @@ const RootNavigator = () => {
             title="Availability"
             component={AvailabilityScreen}
             options={{
+              title: "Availability",
               headerShown: true,
               headerStyle: {
                 backgroundColor: COLORS.background,
@@ -155,7 +160,14 @@ const RootNavigator = () => {
             name="EditAvailabilityScreen"
             title="Edit Availability"
             component={EditAvailabilityScreen}
-            options={{ headerShown: true }}
+            options={{
+              title: " Edit Availability",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
+            }}
           />
           <RootStack.Screen
             name="NewsScreen"

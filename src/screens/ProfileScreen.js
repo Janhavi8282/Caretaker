@@ -34,13 +34,13 @@ const ProfileScreen = ({ navigation }) => {
 
         <View style={styles.infoContainer}>
           <View style={styles.info}>
-            <Text style={styles.heading}>Email:</Text>
-            <View style={styles.textView}>
+            <View style={styles.row}>
+              <Text style={styles.heading}>Email:</Text>
               <Text style={styles.text}>{userData?.email}</Text>
             </View>
+            <View style={styles.row}>
+              <Text style={styles.heading}>Phone: </Text>
 
-            <Text style={styles.heading}>Phone: </Text>
-            <View style={styles.textView}>
               <Text style={styles.text}>{userData?.mobileNumber}</Text>
             </View>
 
@@ -106,8 +106,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   text: {
-    marginTop: 5,
-    fontSize: 18,
+    marginLeft: 10,
+    fontSize: 20,
+    fontWeight: "bold",
+    color: COLORS.white,
   },
   info: {
     marginBottom: 15,
@@ -126,8 +128,9 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    gap: 120,
-    alignContent: "space-between",
+    padding: 10,
+    // gap: 120,
+    // alignContent: "space-between",
   },
   icon: {
     alignItems: "center",
@@ -157,7 +160,8 @@ const styles = StyleSheet.create({
   textView: {
     padding: 8,
     margin: 5,
-    backgroundColor: COLORS.white,
+    // backgroundColor: COLORS.white,
+    color: COLORS.white,
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     borderBottomEndRadius: 10,

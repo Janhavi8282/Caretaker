@@ -47,12 +47,13 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 20,
     paddingVertical: 10,
-    backgroundColor: "pink",
+    borderWidth: 1,
+    // backgroundColor: "pink",
     borderRadius: 5,
   },
   buttonText: {
     fontSize: 16,
-    color: "#fff",
+
     textAlign: "center",
   },
 });

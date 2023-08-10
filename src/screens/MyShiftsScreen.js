@@ -11,13 +11,14 @@ import { useSelector } from "react-redux";
 import { useRoute } from "@react-navigation/native";
 import moment from "moment";
 import ClockScreen from "../screens/ClockScreen";
+import { COLORS } from "../theme/theme";
 
 const MyShiftScreen = ({ navigation }) => {
   const route = useRoute();
   const InProgressShifts = route.params?.InProgressShifts;
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.background }}>
       <FlatList
         data={InProgressShifts}
         renderItem={({ item }) => (
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: COLORS.background,
   },
   itemContainer: {
     flexDirection: "row",

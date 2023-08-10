@@ -24,7 +24,7 @@ const OpenShiftsScreen = ({ navigation, route }) => {
   const userData = useSelector((state) => state.userData);
   const userId = userData?.userId;
   //Get the requested shifts from the Requestedscreen component
-  const { requestedShifts } = route.params;
+  // const { requestedShifts } = route.params;
   const [refresh, setRefresh] = useState(false);
 
   const onRefresh = useCallback(() => {
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: COLORS.yellow,
+    backgroundColor: COLORS.lightBlue,
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: {

@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
 import CustomButton from "../components/CustomButton/CustomButton";
 import { useSelector } from "react-redux";
+import { COLORS } from "../theme/theme";
 
 const EditAvailabilityScreen = ({ route, navigation }) => {
   const { availability } = route.params;
@@ -92,8 +93,8 @@ const EditAvailabilityScreen = ({ route, navigation }) => {
           onChangeText={(text) => setToTime(text)}
           setValue={setToTime}
         />
+        <CustomButton text="Update" onPress={handleUpdateAvailability} />
       </View>
-      <CustomButton text="Update" onPress={handleUpdateAvailability} />
     </View>
   );
 };
@@ -103,11 +104,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     margin: 5,
+    backgroundColor: COLORS.background,
   },
   infoContainer: {
     padding: 20,
     margin: 20,
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.blue,
     borderRadius: 15,
     justifyContent: "center",
     alignContent: "center",
@@ -116,12 +118,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
+    color: COLORS.white,
   },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
-    color: "black",
+    color: COLORS.white,
     padding: 10,
+    fontWeight: "bold",
     marginBottom: 20,
     borderRadius: 5,
   },

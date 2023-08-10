@@ -39,7 +39,7 @@ const SettingsScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("AboutScreen")}
             style={styles.button}
           >
-            <IconFontAwesome name="user-circle" style={styles.icon} />
+            {/* <IconFontAwesome name="user-circle" style={styles.icon} /> */}
             <Text style={styles.text}>About</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -47,12 +47,12 @@ const SettingsScreen = ({ navigation }) => {
             style={styles.button}
           >
             <Text style={styles.text}>Notification</Text>
-            <IconFontAwesome name="greater-than" style={styles.icon} />
+            {/* <IconFontAwesome name="greater-than" style={styles.icon} /> */}
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleLogout} style={styles.button}>
             <Text style={styles.text}>Logout</Text>
-            <IconFontAwesome name="greater-than" style={styles.icon} />
+            {/* <IconFontAwesome name="greater-than" style={styles.icon} /> */}
           </TouchableOpacity>
 
           {/* <TouchableOpacity

@@ -26,10 +26,13 @@ const TabNavigator = ({ navigation }) => {
   const userInfo = route.params?.userInfo;
   const dispatch = useDispatch();
 
+  console.log("userinfo", userInfo);
   useEffect(() => {
-    console.log("UserID");
+    console.log("--UserID--");
     console.log(userInfo?.userId);
     dispatch(setUserData(userInfo));
+    console.log("---", userInfo?.userId);
+
     return () => {};
   }, []);
 
@@ -77,7 +80,7 @@ const TabNavigator = ({ navigation }) => {
           },
           headerShown: true,
           headerStyle: {
-            backgroundColor: COLORS.background, // Change this color to your desired color
+            backgroundColor: COLORS.background,
           },
           headerTintColor: COLORS.blue,
           tabBarIcon: ({ focused }) => (

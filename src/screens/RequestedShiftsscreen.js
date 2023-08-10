@@ -9,6 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import moment from "moment";
 import ShiftAlert from "../components/ShiftAlert";
+import { COLORS } from "../theme/theme";
 
 const RequestedShiftsscreen = ({ navigation }) => {
   const [requestedShifts, setRequestedShifts] = useState([]);
@@ -118,14 +119,15 @@ const RequestedShiftsscreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 5,
     margin: 5,
-    backgroundColor: "#f2f6f7",
+    backgroundColor: COLORS.background,
   },
   infoContainer: {
     padding: 20,
     margin: 20,
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.white,
     borderRadius: 15,
     justifyContent: "center",
     alignContent: "center",
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
   rectangle: {
     padding: 15,
     margin: 10,
-    backgroundColor: "#f2f6f7",
+    backgroundColor: COLORS.white,
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     borderBottomEndRadius: 10,

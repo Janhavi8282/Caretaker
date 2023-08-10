@@ -27,7 +27,7 @@ const RequsetAlert = ({
             <Text style={styles.buttonText}>REQUEST</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={onClose}>
-            <Text style={styles.buttonText}>Close</Text>
+            <Text style={styles.buttonText1}>CLOSE</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -65,18 +65,25 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 20,
     paddingVertical: 10,
-    backgroundColor: COLORS.teal,
+    borderWidth: 1,
+    // backgroundColor: COLORS.blue,
     borderRadius: 5,
   },
   button1: {
     marginTop: 20,
     paddingVertical: 10,
-    backgroundColor: COLORS.yellow,
+    backgroundColor: COLORS.blue,
     borderRadius: 5,
   },
   buttonText: {
     fontSize: 16,
     color: "#fff",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  buttonText1: {
+    fontSize: 16,
+    color: COLORS.dark,
     textAlign: "center",
   },
 });
