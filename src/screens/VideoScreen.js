@@ -63,7 +63,7 @@ const VideoScreen = ({ navigation }) => {
         // onPress={() => onClickItem(item, index)}
         onPress={() =>
           navigation.navigate("VideoPlayer", {
-            videoHeading: `${item.videoLink}`,
+            videoLink: `${item.videoLink}`,
           })
         }
         style={[

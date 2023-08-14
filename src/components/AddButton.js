@@ -15,6 +15,7 @@ import NewsScreen from "../screens/NewsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import InvoiceScreen from "../screens/InvoiceScreen";
 import AboutScreen from "../screens/AboutScreen";
+import AvailabilityScreen from "../screens/AvailabilityScreen";
 
 const AddButton = ({ opened, toggleOpened }) => {
   const animation = React.useRef(new Animated.Value(0)).current;

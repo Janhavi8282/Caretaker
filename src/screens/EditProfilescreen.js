@@ -29,26 +29,19 @@ const EditProfilescreen = ({ route, navigation }) => {
   };
 
   const handleSaveAvailability = async (updatedUserDetails) => {
-    //console.log("USer", updatedUserDetails);
+    console.log("USer", userId);
+    console.log("USer", firstName);
     try {
       const response = await fetch(
-        `https://lifeshaderapi.azurewebsites.net/api/UserService/UpdateUser`,
+        `https://lifeshaderapi.azurewebsites.net/api/UserService/UpdateUser?id=${userId}&firstName=${firstName}&lastName=${lastName}&mobileNumber=${mobileNumber}&email=${email}&type=C`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            userId: userId,
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            mobileNumber: mobileNumber,
-            type: "C",
-          }),
         }
       );
-      //console.log("Response", response);
+      console.log("Response", response);
       if (response.ok) {
         setUpdateUser([updatedUserDetails]);
         //Data updated successfully

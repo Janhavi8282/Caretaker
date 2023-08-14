@@ -161,6 +161,7 @@ const ClockScreen = ({ navigation }) => {
         },
         body: JSON.stringify({
           shiftId: shiftId,
+          status: "COMPLETE",
           clockOutTime: new Date().toISOString(),
         }),
       }

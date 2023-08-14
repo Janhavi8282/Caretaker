@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { StyleSheet, View, SafeAreaView, Dimensions } from "react-native";
 import { COLORS } from "../theme/theme";
 import { useRoute } from "@react-navigation/native";
+import YoutubePlayer from "react-native-youtube-iframe";
+import youtubeUrl from "youtube-url";
 
 // Video screen
 
@@ -13,32 +15,39 @@ const VideoPlayer = ({ navigation }) => {
   const [status, setStatus] = React.useState({});
   const route = useRoute();
   const videoLink = route.params?.videoLink;
+  console.log(videoLink);
+  const videoId = youtubeUrl.extractId(videoLink);
+  console.log(videoId);
 
-  const [videoStyle, setVideoStyle] = useState({});
+  // const [videoStyle, setVideoStyle] = useState({});
 
-  const updateVideoStyle = () => {
-    const screenWidth = Dimensions.get("window").width;
-    setVideoStyle({
-      width: screenWidth,
-      height: (screenWidth * 9) / 16,
-    });
-  };
+  // const updateVideoStyle = () => {
+  //   const screenWidth = Dimensions.get("window").width;
+  //   setVideoStyle({
+  //     width: screenWidth,
+  //     height: (screenWidth * 9) / 16,
+  //   });
+  // };
 
   useEffect(() => {
-    updateVideoStyle();
-
-    // Add listener for screen rotation
-    Dimensions.addEventListener("change", updateVideoStyle);
-
-    // Cleanup the listener when the component unmounts
-    return () => {
-      Dimensions.removeEventListener("change", updateVideoStyle);
-    };
+    // updateVideoStyle();
+    // // Add listener for screen rotation
+    // Dimensions.addEventListener("change", updateVideoStyle);
+    // // Cleanup the listener when the component unmounts
+    // return () => {
+    //   Dimensions.removeEventListener("change", updateVideoStyle);
+    // };
   }, []);
 
+  // return (
+  //   <SafeAreaView style={styles.container}>
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.videoContainer}>
+    <View>
+      <YoutubePlayer height={300} play={true} videoId={videoId} />
+    </View>
+  );
+  {
+    /* <View style={styles.videoContainer}>
         <Video
           ref={video}
           style={[styles.videoMiddle, videoStyle]}
@@ -50,9 +59,10 @@ const VideoPlayer = ({ navigation }) => {
           isLooping
           onPlaybackStatusUpdate={setStatus}
         />
-      </View>
-    </SafeAreaView>
-  );
+      </View> */
+  }
+  //   </SafeAreaView>
+  // );
 };
 
 const styles = StyleSheet.create({

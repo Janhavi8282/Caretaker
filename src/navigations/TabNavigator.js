@@ -28,11 +28,7 @@ const TabNavigator = ({ navigation }) => {
 
   console.log("userinfo", userInfo);
   useEffect(() => {
-    console.log("--UserID--");
-    console.log(userInfo?.userId);
     dispatch(setUserData(userInfo));
-    console.log("---", userInfo?.userId);
-
     return () => {};
   }, []);
 
@@ -48,6 +44,7 @@ const TabNavigator = ({ navigation }) => {
       <Tab.Screen
         name="Home"
         component={HomeScreen}
+        initialParams={{ userInfo }}
         options={{
           tabBarItemStyle: {
             height: 0,

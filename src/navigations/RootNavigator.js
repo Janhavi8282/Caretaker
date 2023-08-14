@@ -29,6 +29,7 @@ import EditProfilescreen from "../screens/EditProfilescreen";
 import EditAvailabilityScreen from "../screens/EditAvailabilityScreen";
 import { COLORS } from "../theme/theme";
 import { useDispatch } from "react-redux";
+import AddAvailibilityScreen from "../screens/AddAvailability";
 
 const RootStack = createNativeStackNavigator();
 
@@ -294,6 +295,18 @@ const RootNavigator = () => {
             component={VideoPlayer}
             options={{
               title: "Video Player",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
+            }}
+          />
+          <RootStack.Screen
+            name="AddAvailibilityScreen"
+            component={AddAvailibilityScreen}
+            options={{
+              title: "Add Availibility",
               headerShown: true,
               headerStyle: {
                 backgroundColor: COLORS.background,

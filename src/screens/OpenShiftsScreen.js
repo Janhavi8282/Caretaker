@@ -87,6 +87,7 @@ const OpenShiftsScreen = ({ navigation, route }) => {
   const handleRequestCloseAlert = () => {
     setShowRequestAlert(false);
     setShowShiftAlert(false);
+    onRefresh();
   };
 
   const handleRequestOkAlert = () => {
@@ -109,6 +110,7 @@ const OpenShiftsScreen = ({ navigation, route }) => {
       ).then(async (response) => {
         if (response.status === 200) {
           setRequestedShift(shiftIdAlert);
+          setRefresh(true);
         }
       });
     } catch (e) {
@@ -132,7 +134,7 @@ const OpenShiftsScreen = ({ navigation, route }) => {
     };
 
     fetchData();
-  }, []);
+  }, [refresh]);
 
   return (
     <View style={styles.container}>
