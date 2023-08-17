@@ -115,10 +115,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: COLORS.teal,
+    backgroundColor: COLORS.white,
   },
   card: {
-    backgroundColor: COLORS.white,
+    backgroundColor: "blue",
     borderRadius: 10,
     padding: 20,
     width: "80%",

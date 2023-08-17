@@ -61,8 +61,8 @@ const RequestedShiftsscreen = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {requestedShifts.map((shift) => (
-        <View style={styles.rectangle} key={shift.shiftRequest}>
+      {requestedShifts.map((shift, index) => (
+        <View style={styles.rectangle} key={index}>
           <Text style={styles.text}>{shiftNames[shift.shiftId]}</Text>
         </View>
       ))}

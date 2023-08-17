@@ -131,7 +131,7 @@ const OpenShiftsScreen = ({ navigation, route }) => {
                   <View style={styles.columns}>
                     {/* pass the shift object as parameter in touchable opacity so that we will get the details of specific list items */}
                     <TouchableOpacity
-                      key={`${shift.shiftId}-${index}`}
+                      key={index}
                       onPress={() =>
                         navigation.navigate("OpenShiftDetailsScreen", {
                           shiftId: shift.shiftId,

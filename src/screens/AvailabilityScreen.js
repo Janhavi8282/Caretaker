@@ -63,7 +63,7 @@ const AvailabilityScreen = ({ navigation, route }) => {
         <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
       }
     >
-      {availability.map((item) => {
+      {availability.map((item, index) => {
         //split date and day seperately
         const date = new Date(item.date);
         const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" });
@@ -73,7 +73,7 @@ const AvailabilityScreen = ({ navigation, route }) => {
           year: "numeric",
         });
         return (
-          <View style={styles.infoContainer} key={item.availabilityId}>
+          <View style={styles.infoContainer} key={index}>
             <Text style={styles.text}>{formattedDate}</Text>
             <Text style={styles.text}>{dayOfWeek}</Text>
             <Text style={styles.text}>

@@ -10,7 +10,6 @@ import {
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { COLORS } from "../theme/theme";
-import NewsDetailScreen from "../screens/NewsDetailScreen";
 import { useSelector } from "react-redux";
 
 const HomeScreen = ({ navigation }) => {
@@ -97,11 +96,11 @@ const HomeScreen = ({ navigation }) => {
       );
 
       // Extract dates from completedShifts and store in shiftDates array
-      const shiftDates = completedShifts.map((item) =>
+      const dates = completedShifts.map((item) =>
         moment(item.date).format("YYYY-MM-DD")
       );
 
-      setShiftDate(shiftDates);
+      setShiftDate(dates);
     } catch (error) {
       console.error("Error fetching shift details: ", error);
     }
@@ -159,10 +158,12 @@ const HomeScreen = ({ navigation }) => {
     });
     setdata(newArrData);
   };
+  //key={item.newsId}
 
   renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
+        key={item.itemId}
         onPress={() =>
           navigation.navigate("NewsDetailScreen", {
             newsHeading: `${item.newsHeading}`,
