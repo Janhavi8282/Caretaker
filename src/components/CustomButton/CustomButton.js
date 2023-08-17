@@ -15,7 +15,7 @@ const CustomButton = ({ onPress, text, type }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fcdb67",
+    backgroundColor: COLORS.white,
     height: 50,
     width: 200,
     marginTop: 20,
@@ -30,14 +30,14 @@ const styles = StyleSheet.create({
 
   //styles for primary buttons which have a solid background
   container_PRIMARY: {
-    backgroundColor: COLORS.yellow,
+    backgroundColor: COLORS.white,
   },
 
   //styles for tertiary button which have no background
   container_TERTIARY: {},
   text: {
     fontWeight: "bold",
-    color: COLORS.white,
+    color: COLORS.blue,
     fontSize: 16,
   },
   //styles for text of tertiary button

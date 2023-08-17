@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Button, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
 import CustomButton from "../components/CustomButton/CustomButton";
 import { useSelector, useDispatch } from "react-redux";
+import { COLORS } from "../theme/theme";
 
 const EditProfilescreen = ({ route, navigation }) => {
   const userData = useSelector((state) => state.userData);
@@ -28,26 +29,19 @@ const EditProfilescreen = ({ route, navigation }) => {
   };
 
   const handleSaveAvailability = async (updatedUserDetails) => {
-    //console.log("USer", updatedUserDetails);
+    console.log("USer", userId);
+    console.log("USer", firstName);
     try {
       const response = await fetch(
-        `https://lifeshaderapi.azurewebsites.net/api/UserService/UpdateUser`,
+        `https://lifeshaderapi.azurewebsites.net/api/UserService/UpdateUser?id=${userId}&firstName=${firstName}&lastName=${lastName}&mobileNumber=${mobileNumber}&email=${email}&type=C`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            userId: userId,
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            mobileNumber: mobileNumber,
-            type: "C",
-          }),
         }
       );
-      //console.log("Response", response);
+      console.log("Response", response);
       if (response.ok) {
         setUpdateUser([updatedUserDetails]);
         //Data updated successfully
@@ -116,19 +110,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     margin: 5,
-    backgroundColor: "#f2f6f7",
+    backgroundColor: COLORS.background,
   },
   infoContainer: {
     padding: 10,
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.blue,
     borderRadius: 15,
     justifyContent: "center",
   },
   textInput: {
-    backgroundColor: "#f2f6f7",
+    backgroundColor: COLORS.white,
     width: "90%",
-    borderColor: "#e8e8e8",
-    borderWidth: 1,
     borderRadius: 5,
     padding: 10,
     margin: 10,

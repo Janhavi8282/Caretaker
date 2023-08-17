@@ -4,39 +4,49 @@ import {
   Text,
   FlatList,
   ActivityIndicator,
+  TouchableOpacity,
   StyleSheet,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useRoute } from "@react-navigation/native";
 import moment from "moment";
+import ClockScreen from "../screens/ClockScreen";
 import { COLORS } from "../theme/theme";
 
-const TimeSheetScreen = ({ navigation }) => {
-  // const { completedShifts } = route.params;
+const MyShiftScreen = ({ navigation }) => {
   const route = useRoute();
-  const completedShifts = route.params?.completedShifts;
+  const InProgressShifts = route.params?.InProgressShifts;
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.background }}>
       <FlatList
-        data={completedShifts}
+        data={InProgressShifts}
         renderItem={({ item }) => (
-          <View style={{ padding: 10 }}>
-            <View style={styles.itemContainer}>
-              <View style={styles.descriptionContainer}>
-                <Text style={styles.dateText}>
-                  {moment(item.date).format("ddd/D MM YYYY")}
-                </Text>
-                <Text style={styles.nameText}>{item.shiftName}</Text>
-                <Text style={styles.timeText}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("ClockScreen", {
+                shiftId: `${item.shiftId}`,
+              })
+            }
+          >
+            <View style={{ padding: 10 }}>
+              <View style={styles.itemContainer}>
+                <View style={styles.descriptionContainer}>
+                  <Text style={styles.dateText}>
+                    {moment(item.date).format("ddd/D MM YYYY")}
+                  </Text>
+                  <Text style={styles.nameText}>{item.shiftName}</Text>
+                  <Text style={styles.timeText}>{item.description}</Text>
+                  {/* <Text style={styles.timeText}>
                   Clock In Time : {moment(item.startTime).format("hh:mm A")}
                 </Text>
                 <Text style={styles.timeText}>
                   Clock Out Time : {moment(item.endTime).format("hh:mm A")}
-                </Text>
+                </Text> */}
+                </View>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
         keyExtractor={(item) => item.shiftId.toString()}
       />
@@ -57,7 +67,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: "#fff",
     borderRadius: 8,
-    marginBottom: 10,
+    // marginBottom: 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -97,4 +107,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TimeSheetScreen;
+export default MyShiftScreen;

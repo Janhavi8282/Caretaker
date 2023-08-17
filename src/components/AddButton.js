@@ -15,6 +15,7 @@ import NewsScreen from "../screens/NewsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import InvoiceScreen from "../screens/InvoiceScreen";
 import AboutScreen from "../screens/AboutScreen";
+import AvailabilityScreen from "../screens/AvailabilityScreen";
 
 const AddButton = ({ opened, toggleOpened }) => {
   const animation = React.useRef(new Animated.Value(0)).current;
@@ -93,7 +94,9 @@ const AddButton = ({ opened, toggleOpened }) => {
             />
           </Animated.View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("AboutScreen")}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("AvailabilityScreen")}
+        >
           <Animated.View
             style={[
               styles.item,
@@ -117,7 +120,7 @@ const AddButton = ({ opened, toggleOpened }) => {
             ]}
           >
             <Image
-              source={require("../../assets/profile.png")}
+              source={require("../../assets/clock.png")}
               resizeMode="contain"
               style={styles.itemIcon}
             />
@@ -164,7 +167,7 @@ const styles = StyleSheet.create({
     marginTop: -30,
   },
   addButton: {
-    shadowColor: COLORS.dark,
+    shadowColor: COLORS.blue,
     shadowOpacity: 0.3,
     shadowOffset: {
       width: 0,
@@ -174,7 +177,7 @@ const styles = StyleSheet.create({
   addButtonInner: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.teal,
+    backgroundColor: COLORS.blue,
     width: 60,
     height: 60,
     borderRadius: 30,
@@ -190,7 +193,7 @@ const styles = StyleSheet.create({
     left: 5,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.teal,
+    backgroundColor: COLORS.blue,
     width: 50,
     height: 50,
     borderRadius: 25,

@@ -9,7 +9,6 @@ import OpenShiftsScreen from "../screens/OpenShiftsScreen";
 import OpenShiftDetailsScreen from "../screens/OpenShiftDetailsScreen";
 import RequestedShiftsscreen from "../screens/RequestedShiftsscreen";
 import ClockScreen from "../screens/ClockScreen";
-import ProfileScreen from "../screens/ProfileScreen";
 import ShiftScreen from "../screens/ShiftScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import AvailabilityScreen from "../screens/AvailabilityScreen";
@@ -21,6 +20,8 @@ import TimeSheetScreen from "../screens/TimeSheetScreen";
 import VideoScreen from "../screens/VideoScreen";
 import InvoiceScreen from "../screens/InvoiceScreen";
 import AboutScreen from "../screens/AboutScreen";
+import MyShiftScreen from "../screens/MyShiftsScreen";
+import VideoPlayer from "../components/VideoPlayer";
 import NotificationScreen from "../screens/NotificationScreen";
 import NotificationDetailsScreen from "../screens/NotificationDetailsScreen";
 import SettingsScreen from "../screens/SettingsScreen";
@@ -28,6 +29,7 @@ import EditProfilescreen from "../screens/EditProfilescreen";
 import EditAvailabilityScreen from "../screens/EditAvailabilityScreen";
 import { COLORS } from "../theme/theme";
 import { useDispatch } from "react-redux";
+import AddAvailibilityScreen from "../screens/AddAvailability";
 
 const RootStack = createNativeStackNavigator();
 
@@ -68,15 +70,13 @@ const RootNavigator = () => {
           <RootStack.Screen
             name="ClockScreen"
             component={ClockScreen}
-            options={{ headerShown: true }}
-          />
-          <RootStack.Screen
-            name="ProfileScreen"
-            component={ProfileScreen}
             options={{
+              title: "Clock",
               headerShown: true,
-              title: "Profile",
-              headerTitleAlign: "center",
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
             }}
           />
           <RootStack.Screen
@@ -85,7 +85,11 @@ const RootNavigator = () => {
             options={{
               headerShown: true,
               title: "Edit Profile",
-              headerTitleAlign: "center",
+              // headerTitleAlign: "center",
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
             }}
           />
           <RootStack.Screen
@@ -101,17 +105,38 @@ const RootNavigator = () => {
           <RootStack.Screen
             name="OpenShiftsScreen"
             component={OpenShiftsScreen}
-            options={{ headerShown: true }}
+            options={{
+              title: "Open Shifts",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
+            }}
           />
           <RootStack.Screen
             name="RequestedShiftsscreen"
             component={RequestedShiftsscreen}
-            options={{ headerShown: true }}
+            options={{
+              title: "Requested Shifts",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
+            }}
           />
           <RootStack.Screen
             name="OpenShiftDetailsScreen"
             component={OpenShiftDetailsScreen}
-            options={{ headerShown: true }}
+            options={{
+              title: "Shift Details",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
+            }}
           />
           <RootStack.Screen
             name="ForgotPasswordScreen"
@@ -123,13 +148,27 @@ const RootNavigator = () => {
             name="AvailabilityScreen"
             title="Availability"
             component={AvailabilityScreen}
-            options={{ headerShown: true }}
+            options={{
+              title: "Availability",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
+            }}
           />
           <RootStack.Screen
             name="EditAvailabilityScreen"
             title="Edit Availability"
             component={EditAvailabilityScreen}
-            options={{ headerShown: true }}
+            options={{
+              title: " Edit Availability",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
+            }}
           />
           <RootStack.Screen
             name="NewsScreen"
@@ -138,9 +177,9 @@ const RootNavigator = () => {
               title: "News Screen",
               headerShown: true,
               headerStyle: {
-                backgroundColor: COLORS.teal,
+                backgroundColor: COLORS.background,
               },
-              headerTintColor: COLORS.white,
+              headerTintColor: COLORS.blue,
             }}
           />
           <RootStack.Screen
@@ -150,9 +189,9 @@ const RootNavigator = () => {
               title: "News Details Screen",
               headerShown: true,
               headerStyle: {
-                backgroundColor: COLORS.teal,
+                backgroundColor: COLORS.background,
               },
-              headerTintColor: COLORS.white,
+              headerTintColor: COLORS.blue,
             }}
           />
           <RootStack.Screen
@@ -174,9 +213,9 @@ const RootNavigator = () => {
               title: "Video Screen",
               headerShown: true,
               headerStyle: {
-                backgroundColor: COLORS.teal,
+                backgroundColor: COLORS.background,
               },
-              headerTintColor: COLORS.white,
+              headerTintColor: COLORS.blue,
             }}
           />
           <RootStack.Screen
@@ -186,9 +225,9 @@ const RootNavigator = () => {
               title: "Notifications",
               headerShown: true,
               headerStyle: {
-                backgroundColor: COLORS.teal,
+                backgroundColor: COLORS.background,
               },
-              headerTintColor: COLORS.white,
+              headerTintColor: COLORS.blue,
             }}
           />
           <RootStack.Screen
@@ -198,21 +237,21 @@ const RootNavigator = () => {
               title: "Notification Details",
               headerShown: true,
               headerStyle: {
-                backgroundColor: COLORS.teal,
+                backgroundColor: COLORS.background,
               },
-              headerTintColor: COLORS.white,
+              headerTintColor: COLORS.blue,
             }}
           />
           <RootStack.Screen
             name="TimeSheetScreen"
             component={TimeSheetScreen}
             options={{
-              title: "Time Sheet",
+              title: "Completed Shift",
               headerShown: true,
               headerStyle: {
-                backgroundColor: COLORS.teal,
+                backgroundColor: COLORS.background,
               },
-              headerTintColor: COLORS.white,
+              headerTintColor: COLORS.blue,
             }}
           />
           <RootStack.Screen
@@ -222,9 +261,9 @@ const RootNavigator = () => {
               title: "Invoice",
               headerShown: true,
               headerStyle: {
-                backgroundColor: COLORS.teal,
+                backgroundColor: COLORS.background,
               },
-              headerTintColor: COLORS.white,
+              headerTintColor: COLORS.blue,
             }}
           />
           <RootStack.Screen
@@ -234,9 +273,45 @@ const RootNavigator = () => {
               title: "About Us",
               headerShown: true,
               headerStyle: {
-                backgroundColor: COLORS.teal,
+                backgroundColor: COLORS.background,
               },
-              headerTintColor: COLORS.white,
+              headerTintColor: COLORS.blue,
+            }}
+          />
+          <RootStack.Screen
+            name="MyShiftScreen"
+            component={MyShiftScreen}
+            options={{
+              title: "My Shift",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
+            }}
+          />
+          <RootStack.Screen
+            name="VideoPlayer"
+            component={VideoPlayer}
+            options={{
+              title: "Video Player",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
+            }}
+          />
+          <RootStack.Screen
+            name="AddAvailibilityScreen"
+            component={AddAvailibilityScreen}
+            options={{
+              title: "Add Availibility",
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.blue,
             }}
           />
         </RootStack.Navigator>

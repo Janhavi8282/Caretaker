@@ -1,69 +1,91 @@
-import { View, Text, StyleSheet, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import CustomButton from "../components/CustomButton/CustomButton";
 import { useSelector } from "react-redux";
 import { COLORS } from "../theme/theme";
 
-const EditAvailabilityScreen = ({ route, navigation }) => {
-  const { availability } = route.params;
+const AddAvailibilityScreen = ({ navigation }) => {
   const userData = useSelector((state) => state.userData);
   const userId = userData?.userId;
-  const [date, setDate] = useState(availability.date);
-  const [fromTime, setFromTime] = useState(availability.fromTime);
-  const [toTime, setToTime] = useState(availability.toTime);
+  const [date, setDate] = useState();
+  const [fromTime, setFromTime] = useState();
+  const [toTime, setToTime] = useState();
   const [updateAvailability, setUpdatedAvailability] = useState("");
   const [availabilityId, setAvailabilityId] = useState(null);
-  const updatedUserAvailability = {
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const addAvailability = {
     userId: userId,
     date: date,
     fromTime: fromTime,
     toTime: toTime,
   };
-  console.log("Updated availability", updatedUserAvailability);
-
-  const handleUpdateAvailability = async (updatedUserAvailability) => {
-    //console.log("Updated Availability", updatedUserAvailability);
-    //Make API call to update availablity
-    try {
-      const response = await fetch(
-        `https://lifeshaderapi.azurewebsites.net/api/UserService/UpdateAvailibility?id=${userId}&date=${availability.date}&fromTime=${availability.fromTime}&toTime=${availability.toTime}`,
+  const showAlert = () => {
+    Alert.alert(
+      "Please Enter values",
+      "Need to fill all values to add availibilty",
+      [
         {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: userId,
-            date: date,
-            fromTime: fromTime,
-            toTime: toTime,
-          }),
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const handleAddAvailability = async () => {
+    console.log("Availability", userId);
+    console.log("Availability", date);
+    console.log("Availability", fromTime);
+    console.log("Availability", toTime);
+    //Make API call to update availablity
+    if (date != null && fromTime != null && toTime != null) {
+      try {
+        const response = await fetch(
+          `https://lifeshaderapi.azurewebsites.net/api/UserService/AddAvailibility?id=${userId}&date=${date}&fromTime=${fromTime}&toTime=${toTime}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: userId,
+              date: date,
+              fromTime: fromTime,
+              toTime: toTime,
+            }),
+          }
+        );
+        console.log("Response", response.ok);
+        if (response.ok) {
+          showSuccessBox();
+          console.log("Data added");
         }
-      );
-      // console.log("Response", json.stringify(response));
-      if (response.ok) {
-        setUpdatedAvailability(updatedUserAvailability);
-        //Data updated successfully
-        showSuccessBox();
-        console.log("Data updated");
+      } catch (error) {
+        console.error("Error updating data", error);
       }
-    } catch (error) {
-      console.error("Error updating data", error);
+    } else {
+      showAlert();
     }
   };
 
   //success box when shift is requested successfully
   const showSuccessBox = () => {
     Alert.alert(
-      "Your availability is updated successfully!!!",
+      "Your availability is aaded successfully!!!",
       "Go back to availability screen",
       [
         {
           text: "OK",
-          onPress: () =>
-            navigation.navigate("AvailabilityScreen", {
-              updateAvailability: updatedUserAvailability,
-            }),
+          onPress: () => navigation.navigate("AvailabilityScreen"),
         },
       ]
     );
@@ -76,6 +98,7 @@ const EditAvailabilityScreen = ({ route, navigation }) => {
         <TextInput
           style={styles.input}
           value={date}
+          placeholder="e.g., 2023-08-14T03:22:20.431Z"
           onChangeText={(text) => setDate(text)}
           setValue={setDate}
         />
@@ -83,6 +106,7 @@ const EditAvailabilityScreen = ({ route, navigation }) => {
         <TextInput
           style={styles.input}
           value={fromTime}
+          placeholder="e.g., 2023-08-14T03:22:20.431Z"
           onChangeText={(text) => setFromTime(text)}
           setValue={setFromTime}
         />
@@ -90,10 +114,11 @@ const EditAvailabilityScreen = ({ route, navigation }) => {
         <TextInput
           style={styles.input}
           value={toTime}
+          placeholder="e.g., 2023-08-14T03:22:20.431Z"
           onChangeText={(text) => setToTime(text)}
           setValue={setToTime}
         />
-        <CustomButton text="Update" onPress={handleUpdateAvailability} />
+        <CustomButton text="ADD" onPress={handleAddAvailability} />
       </View>
     </View>
   );
@@ -131,4 +156,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditAvailabilityScreen;
+export default AddAvailibilityScreen;

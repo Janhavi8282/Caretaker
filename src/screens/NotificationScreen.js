@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { useSelector } from "react-redux";
 import NotificationAlert from "../components/NotificationAlert";
+import { COLORS } from "../theme/theme";
 
 const NotificationScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -88,12 +89,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 2,
-    backgroundColor: "#f2f6f7",
+    backgroundColor: COLORS.background,
   },
   button: {
     padding: 20,
     margin: 10,
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.white,
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     borderBottomEndRadius: 10,

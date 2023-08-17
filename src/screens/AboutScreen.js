@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Logo from "../../assets/loginImage.jpg";
+import { COLORS } from "../theme/theme";
 // import * as Linking from "react-native-linking";
 
 const AboutScreen = ({ navigation }) => {
@@ -45,6 +46,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     padding: 20,
+    backgroundColor: COLORS.background,
   },
   logo: {
     width: 200,

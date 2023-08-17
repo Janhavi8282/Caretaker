@@ -25,8 +25,7 @@ const OpenShiftDetailsScreen = ({ navigation, route }) => {
   let [shift, setShift] = useState(null);
   //getting the shift id
   const { shiftId } = route.params;
-  const userInfo = route.params?.userInfo;
-  const { userId } = userData.userId;
+  const userId = userData?.userId;
 
   //getting the details of available shifts
   useEffect(() => {
@@ -57,6 +56,7 @@ const OpenShiftDetailsScreen = ({ navigation, route }) => {
   //posting the data to requested shifts when the button is clicked
   const handleRequestShift = () => {
     //If shift is not available or data is not loaded, do nothing
+    console.log("userid", userId);
     try {
       fetch(
         "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/RequestShift",
@@ -87,7 +87,7 @@ const OpenShiftDetailsScreen = ({ navigation, route }) => {
     Alert.alert("Your Shift is Requested", "Go back to shifts screen", [
       {
         text: "OK",
-        onPress: () => navigation.navigate("ShiftScreen"),
+        onPress: () => navigation.navigate("OpenShiftsScreen"),
       },
     ]);
   };

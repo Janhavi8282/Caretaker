@@ -1,6 +1,3 @@
-// React Native Bottom Navigation
-// https://aboutreact.com/react-native-bottom-navigation/
-
 import React, { useState, useRef, useEffect } from "react";
 import {
   TouchableOpacity,
@@ -12,10 +9,13 @@ import {
 } from "react-native";
 import { COLORS } from "../theme/theme";
 import Modal from "react-native-modal";
-import TimeSheetScreen from "../screens/TimeSheetScreen";
 import { useSelector } from "react-redux";
+import { useRoute } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ClockScreen = ({ navigation }) => {
+  const route = useRoute();
+  const shiftId = route.params?.shiftId;
   const [timer, setTimer] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -97,11 +97,17 @@ const ClockScreen = ({ navigation }) => {
       const currentTime = new Date().toLocaleTimeString();
       setRealTimeData((prevData) => [...prevData, currentTime]);
     }, 1000);
+    try {
+      await AsyncStorage.setItem("startTime", new Date().toISOString());
+    } catch (error) {
+      console.error("Error storing start time:", error);
+    }
     console.log(startTime);
     console.log(endTime);
     console.log(realTimeData[0]);
     console.log(realTimeData[realTimeData.length - 1]);
     console.log(getTimeDifference());
+    console.log("shiftid", shiftId);
     fetch(
       "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/UpdateClockInTime",
       {
@@ -111,7 +117,7 @@ const ClockScreen = ({ navigation }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          assignmentId: 2,
+          shiftId: shiftId,
           clockInTime: new Date().toISOString(),
         }),
       }
@@ -120,7 +126,9 @@ const ClockScreen = ({ navigation }) => {
       .then((responseClockInData) => {
         console.log(JSON.stringify(responseClockInData));
       })
-      .done();
+      .catch((error) => {
+        console.error("Error updating clock-in time: ", error);
+      });
   };
   const handleClcokOutConfirmation = async () => {
     setDisplayMessage("You are off Clock");
@@ -132,7 +140,11 @@ const ClockScreen = ({ navigation }) => {
     setIsActive(false);
     setIsPaused(false);
     setTimer(0);
-
+    try {
+      await AsyncStorage.removeItem("startTime");
+    } catch (error) {
+      console.error("Error removing start time:", error);
+    }
     const payload = {
       assignmentId: 2,
       clockOutTime: new Date().toISOString(),
@@ -148,76 +160,85 @@ const ClockScreen = ({ navigation }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          assignmentId: 2,
-          clockInTime: new Date().toISOString(),
+          shiftId: shiftId,
+          status: "COMPLETE",
+          clockOutTime: new Date().toISOString(),
         }),
       }
     )
       .then((response) => response.json())
       .then((responseClockOutData) => {
-        console.log("===========");
         console.log(JSON.stringify(responseClockOutData));
       })
-      .done();
-
-    // try {
-    //   const userId = userData.userID;
-    //   const payload = {
-    //     assignmentId: 3,
-    //     clockOutTime: new Date().toISOString(),
-    //   };
-    //   const response = await fetch(
-    //     "https://lifeshaderapi.azurewebsites.net/api/ShiftServices/UpdateClockOutTime",
-    //     {
-    //       method: "PUT",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify(payload),
-    //     }
-    //   );
-
-    //   const data = await response.json();
-    //   console.log(data);
-    // } catch (error) {
-    //   console.error("Error updating clock-out time: ", error);
-    // }
-  };
-
-  const handleTimeSheet = async () => {
-    const id = userData?.userId;
-    console.log(userData?.userId);
-
-    fetch(
-      `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetMyShifts?id=${id}`
-    )
-      .then((response) => response.json())
-      .then((shiftIds) => {
-        Promise.all(
-          shiftIds.map((shiftId) => {
-            console.log("==========");
-            console.log(shiftId.shiftId);
-            return fetch(
-              `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID?id=${shiftId.shiftId}`
-            ).then((response) => response.json());
-          })
-        )
-          .then((shiftDetails) => {
-            const completedShifts = shiftDetails.filter(
-              (shift) => shift.status === "COMPLETE"
-            );
-            console.log(shiftDetails);
-            console.log(shiftIds);
-            navigation.navigate("TimeSheetScreen", { completedShifts });
-          })
-          .catch((error) => {
-            console.error("Error fetching shift details: ", error);
-          });
-      })
       .catch((error) => {
-        console.error("Error fetching shift IDs: ", error);
+        console.error("Error updating clock-out time: ", error);
       });
   };
+  useEffect(() => {
+    const loadStoredData = async () => {
+      // Retrieve the start time from AsyncStorage and calculate the elapsed time
+      try {
+        const storedStartTime = await AsyncStorage.getItem("startTime");
+        if (storedStartTime) {
+          const currentTime = new Date();
+          const startTime = new Date(storedStartTime);
+          const difference = currentTime.getTime() - startTime.getTime();
+          setTimer(Math.floor(difference / 1000));
+          setStartTime(startTime);
+
+          // Resume the timer
+          setIsActive(true);
+          setIsPaused(false);
+          countRef.current = setInterval(() => {
+            setTimer((timer) => timer + 1);
+          }, 1000);
+        }
+      } catch (error) {
+        console.error("Error retrieving start time:", error);
+      }
+    };
+
+    loadStoredData();
+
+    // Clean up interval on component unmount
+    return () => {
+      clearInterval(countRef.current);
+    };
+  }, []);
+  // const handleTimeSheet = async () => {
+  //   const id = userData?.userId;
+  //   console.log(userData?.userId);
+
+  //   fetch(
+  //     `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetMyShifts?id=${id}`
+  //   )
+  //     .then((response) => response.json())
+  //     .then((shiftIds) => {
+  //       Promise.all(
+  //         shiftIds.map((shiftId) => {
+  //           console.log("==========");
+  //           console.log(shiftId.shiftId);
+  //           return fetch(
+  //             `https://lifeshaderapi.azurewebsites.net/api/ShiftServices/GetShiftByID?id=${shiftId.shiftId}`
+  //           ).then((response) => response.json());
+  //         })
+  //       )
+  //         .then((shiftDetails) => {
+  //           const completedShifts = shiftDetails.filter(
+  //             (shift) => shift.status === "COMPLETE"
+  //           );
+  //           console.log(shiftDetails);
+  //           console.log(shiftIds);
+  //           navigation.navigate("TimeSheetScreen", { completedShifts });
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error fetching shift details: ", error);
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching shift IDs: ", error);
+  //     });
+  // };
 
   // calculate the time values for display
   const formatTime = (time) => {
@@ -234,14 +255,9 @@ const ClockScreen = ({ navigation }) => {
         style={{
           flex: 1,
           alignItems: "center",
+          backgroundColor: COLORS.background,
         }}
       >
-        <TouchableOpacity
-          style={styles.TimeSheetbutton}
-          onPress={handleTimeSheet}
-        >
-          <Text style={styles.buttonText}>Time Sheet</Text>
-        </TouchableOpacity>
         <Text style={styles.clockText}>{displayMessage}</Text>
         <View style={styles.timerContainer}>
           <Text style={styles.timer}>{formatTime(timer)}</Text>
@@ -280,16 +296,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: COLORS.background,
   },
   timerContainer: {
     borderWidth: 4,
-    borderColor: COLORS.teal,
+    borderColor: COLORS.blue,
     width: 250,
     height: 250,
     borderRadius: 250 / 2,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.teal,
+    backgroundColor: COLORS.blue,
   },
   timer: {
     fontSize: 50,
@@ -304,7 +321,7 @@ const styles = StyleSheet.create({
     height: 45,
     padding: 5,
     // borderRadius: 80 / 2,
-    backgroundColor: COLORS.yellow,
+    backgroundColor: COLORS.blue,
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 20,
@@ -312,7 +329,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    color: "#fff",
+    color: COLORS.white,
+    fontWeight: "bold",
   },
   TimeSheetbutton: {
     position: "absolute",

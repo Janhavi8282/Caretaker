@@ -8,69 +8,70 @@ import {
 } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import { COLORS } from "../theme/theme";
+import TabContainer from "../components/TabContainer";
 
 const ProfileScreen = ({ navigation }) => {
   const userData = useSelector((state) => state.userData);
   const userId = userData?.userId;
 
   return (
-    <View style={styles.container}>
-      {/* curved box*/}
-      <View style={styles.box} />
-
-      <View style={styles.photo}>
-        <View style={styles.circle}>
-          <Image
-            source={require("../../assets/profile.jpg")}
-            style={styles.image}
-          />
+    <TabContainer>
+      <View style={styles.container}>
+        <View style={styles.photo}>
+          <View style={styles.circle}>
+            <Image
+              source={require("../../assets/profile.jpg")}
+              style={styles.image}
+            />
+          </View>
+          <View>
+            <Text style={styles.name}>
+              {userData?.firstName} {userData?.lastName}
+            </Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.name}>
-            {userData?.firstName} {userData?.lastName}
-          </Text>
+
+        <View style={styles.infoContainer}>
+          <View style={styles.info}>
+            <View style={styles.row}>
+              <Text style={styles.heading}>Email:</Text>
+              <Text style={styles.text}>{userData?.email}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.heading}>Phone: </Text>
+
+              <Text style={styles.text}>{userData?.mobileNumber}</Text>
+            </View>
+
+            <GestureHandlerRootView>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("EditProfilescreen", { userData })
+                }
+                style={styles.button}
+              >
+                <Text style={styles.btnText}>EDIT</Text>
+              </TouchableOpacity>
+            </GestureHandlerRootView>
+          </View>
         </View>
       </View>
-
-      <View style={styles.infoContainer}>
-        <View style={styles.info}>
-          <Text style={styles.heading}>Email:</Text>
-          <View style={styles.info}>
-            <Text style={styles.text}>{userData?.email}</Text>
-          </View>
-
-          <Text style={styles.heading}>Phone: </Text>
-          <View style={styles.info}>
-            <Text style={styles.text}>{userData?.mobileNumber}</Text>
-          </View>
-
-          <GestureHandlerRootView>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("EditProfilescreen", { userData })
-              }
-              style={styles.button}
-            >
-              <Text style={styles.btnText}>EDIT</Text>
-            </TouchableOpacity>
-          </GestureHandlerRootView>
-        </View>
-      </View>
-    </View>
+    </TabContainer>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f6f7",
+    backgroundColor: COLORS.background,
   },
   box: {
     flex: 0.3,
-    backgroundColor: "#1dc7c4",
+    backgroundColor: COLORS.blue,
     borderBottomRightRadius: 95,
-    justifyContent: "flex-end", //Align the content to the bottom of box
-    alignItems: "center", // Center the content horizontally
+    justifyContent: "flex-end",
+    alignItems: "center",
     left: 0,
     right: 0,
     bottom: 0,
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   photo: {
-    flexDirection: "column", //Arrage the circle in column
+    flexDirection: "column",
     alignItems: "center",
     marginTop: -50,
   },
@@ -93,6 +94,7 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 150 / 2,
     shadowRadius: 5,
+    marginTop: 60,
     padding: 1,
     elevation: 8,
   },
@@ -104,8 +106,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   text: {
-    marginTop: 5,
-    fontSize: 18,
+    marginLeft: 10,
+    fontSize: 20,
+    fontWeight: "bold",
+    color: COLORS.white,
   },
   info: {
     marginBottom: 15,
@@ -114,17 +118,19 @@ const styles = StyleSheet.create({
     margin: 15,
     marginTop: 30,
     padding: 20,
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.blue,
     borderRadius: 15,
   },
   heading: {
     fontSize: 20,
     fontWeight: "bold",
+    color: COLORS.white,
   },
   row: {
     flexDirection: "row",
-    gap: 120,
-    alignContent: "space-between",
+    padding: 10,
+    // gap: 120,
+    // alignContent: "space-between",
   },
   icon: {
     alignItems: "center",
@@ -133,17 +139,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   button: {
-    backgroundColor: "#fcdb67",
-    height: 60,
+    backgroundColor: COLORS.white,
+    // color: COLORS.blue,
+    height: 50,
     width: 200,
     marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
-    borderBottomStartRadius: 20,
-    borderBottomEndRadius: 20,
+    borderTopStartRadius: 10,
+    borderTopEndRadius: 10,
+    borderBottomStartRadius: 10,
+    borderBottomEndRadius: 10,
   },
   image: {
     width: 150,
@@ -153,7 +160,8 @@ const styles = StyleSheet.create({
   textView: {
     padding: 8,
     margin: 5,
-    backgroundColor: "#f2f6f7",
+    // backgroundColor: COLORS.white,
+    color: COLORS.white,
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     borderBottomEndRadius: 10,
@@ -162,8 +170,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   btnText: {
-    color: "#ffffff",
-    fontSize: 20,
+    color: COLORS.blue,
+    fontSize: 18,
     fontWeight: "bold",
   },
 });

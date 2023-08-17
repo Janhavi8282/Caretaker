@@ -4,10 +4,14 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
+  Button,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../components/CustomButton/CustomButton";
 import { useSelector } from "react-redux";
+import EditAvailabilityScreen from "./EditAvailabilityScreen";
+import { COLORS } from "../theme/theme";
+import AddAvailibilityScreen from "../screens/AddAvailability";
 
 const AvailabilityScreen = ({ navigation, route }) => {
   const [availability, setAvailability] = useState([]);
@@ -55,49 +59,66 @@ const AvailabilityScreen = ({ navigation, route }) => {
   const handleEditAvailability = (availability) => {
     navigation.navigate("EditAvailabilityScreen", { availability });
   };
+  const handleAddAvailibity = () => {
+    navigation.navigate("AddAvailibilityScreen");
+  };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
-      }
-    >
-      {availability.map((item) => {
-        //split date and day seperately
-        const date = new Date(item.date);
-        const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" });
-        const formattedDate = date.toLocaleDateString("en-US", {
-          month: "short",
-          day: "2-digit",
-          year: "numeric",
-        });
-        return (
-          <View style={styles.infoContainer} key={item.availabilityId}>
-            <Text style={styles.text}>{formattedDate}</Text>
-            <Text style={styles.text}>{dayOfWeek}</Text>
-            <Text style={styles.text}>
-              From: {new Date(item.fromTime).toLocaleTimeString()}
-            </Text>
-            <Text style={styles.text}>
-              To: {new Date(item.toTime).toLocaleTimeString()}
-            </Text>
-            <CustomButton
-              text="Edit Availability"
-              onPress={() => handleEditAvailability(item)}
-            />
-          </View>
-        );
-      })}
-    </ScrollView>
+    <View style={styles.container}>
+      <ScrollView>
+        {availability.map((item) => {
+          //split date and day seperately
+          const date = new Date(item.date);
+          const dayOfWeek = date.toLocaleDateString("en-US", {
+            weekday: "long",
+          });
+          const formattedDate = date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "2-digit",
+            year: "numeric",
+          });
+          return (
+            <View style={styles.infoContainer} key={item.availabilityId}>
+              <Text style={styles.text}>{formattedDate}</Text>
+              <Text style={styles.text}>{dayOfWeek}</Text>
+              <Text style={styles.text}>
+                From: {new Date(item.fromTime).toLocaleTimeString()}
+              </Text>
+              <Text style={styles.text}>
+                To: {new Date(item.toTime).toLocaleTimeString()}
+              </Text>
+              <CustomButton
+                text="Edit Availability"
+                onPress={() => handleEditAvailability(item)}
+              />
+            </View>
+          );
+        })}
+      </ScrollView>
+      <View style={styles.buttonContainer}>
+        <Button
+          style={styles.button}
+          title="Add Availability"
+          onPress={() => handleAddAvailibity()}
+        />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    justifyContent: "space-between",
+    backgroundColor: COLORS.background,
+  },
+  buttonContainer: {
+    margin: 10,
+  },
+  ScrollViewcontainer: {
+    flex: 1,
     margin: 5,
+    backgroundColor: COLORS.background,
   },
   row: {
     flexDirection: "row",
@@ -111,8 +132,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   infoContainer: {
-    padding: 20,
-    margin: 20,
+    paddingLeft: 20,
+    paddingTop: 20,
+    margin: 10,
     backgroundColor: "#ffffff",
     borderRadius: 15,
     justifyContent: "center",
@@ -121,7 +143,8 @@ const styles = StyleSheet.create({
   button: {
     padding: 15,
     margin: 5,
-    backgroundColor: "#87CEEB",
+    fontWeight: "bold",
+    backgroundColor: COLORS.blue,
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     borderBottomEndRadius: 10,
